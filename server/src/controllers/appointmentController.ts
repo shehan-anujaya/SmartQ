@@ -331,7 +331,7 @@ export const cancelAppointment = async (
 // @route   GET /api/appointments/stats/overview
 // @access  Private (Admin/Staff)
 export const getAppointmentStats = async (
-  req: AuthRequest,
+  _req: AuthRequest,
   res: Response
 ): Promise<void> => {
   try {

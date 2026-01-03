@@ -169,7 +169,7 @@ export const deleteService = async (
 // @route   GET /api/services/categories/list
 // @access  Public
 export const getCategories = async (
-  req: AuthRequest,
+  _req: AuthRequest,
   res: Response
 ): Promise<void> => {
   try {

@@ -282,7 +282,7 @@ export const cancelQueue = async (
 // @route   GET /api/queues/stats/overview
 // @access  Private (Admin/Staff)
 export const getQueueStats = async (
-  req: AuthRequest,
+  _req: AuthRequest,
   res: Response
 ): Promise<void> => {
   try {

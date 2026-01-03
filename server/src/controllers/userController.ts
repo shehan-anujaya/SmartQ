@@ -215,7 +215,7 @@ export const activateUser = async (
 // @route   GET /api/users/stats/overview
 // @access  Private (Admin)
 export const getUserStats = async (
-  req: AuthRequest,
+  _req: AuthRequest,
   res: Response
 ): Promise<void> => {
   try {

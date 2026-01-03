@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken';
+import * as jwt from 'jsonwebtoken';
 import { UserRole } from '../types';
 
 // Generate access token (short-lived)
@@ -10,9 +10,9 @@ export const generateAccessToken = (userId: string, role: UserRole): string => {
     throw new Error('JWT_SECRET is not defined');
   }
 
-  return jwt.sign({ userId, role }, jwtSecret, {
+  return jwt.sign({ userId, role }, jwtSecret as jwt.Secret, {
     expiresIn: jwtExpire
-  });
+  } as jwt.SignOptions);
 };
 
 // Generate refresh token (long-lived)
@@ -24,9 +24,9 @@ export const generateRefreshToken = (userId: string): string => {
     throw new Error('JWT_REFRESH_SECRET is not defined');
   }
 
-  return jwt.sign({ userId }, refreshSecret, {
+  return jwt.sign({ userId }, refreshSecret as jwt.Secret, {
     expiresIn: refreshExpire
-  });
+  } as jwt.SignOptions);
 };
 
 // Legacy function for backward compatibility

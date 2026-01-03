@@ -152,7 +152,7 @@ export const getOptimalSlots = async (req: AuthRequest, res: Response): Promise<
 // @desc    Get AI service health check
 // @route   GET /api/ai/health
 // @access  Public
-export const getAIHealthCheck = async (req: AuthRequest, res: Response): Promise<void> => {
+export const getAIHealthCheck = async (_req: AuthRequest, res: Response): Promise<void> => {
   try {
     res.status(200).json({
       success: true,

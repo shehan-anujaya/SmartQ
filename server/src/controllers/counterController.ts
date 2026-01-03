@@ -1,7 +1,7 @@
 import { Response } from 'express';
 import Counter from '../models/Counter';
 import Queue from '../models/Queue';
-import { AuthRequest, ApiResponse } from '../types';
+import { AuthRequest, ApiResponse, CounterStatus, QueueStatus } from '../types';
 
 // @desc    Get all counters with pagination
 // @route   GET /api/counters
@@ -271,10 +271,10 @@ export const assignQueueToCounter = async (req: AuthRequest, res: Response): Pro
 
     // Update counter and queue
     counter.currentQueue = queue._id;
-    counter.status = 'busy';
+    counter.status = CounterStatus.BUSY;
     await counter.save();
 
-    queue.status = 'in_progress';
+    queue.status = QueueStatus.IN_PROGRESS;
     queue.actualStartTime = new Date();
     await queue.save();
 
@@ -319,14 +319,14 @@ export const completeQueueAtCounter = async (req: AuthRequest, res: Response): P
 
     const queue = await Queue.findById(counter.currentQueue);
     if (queue) {
-      queue.status = 'completed';
+      queue.status = QueueStatus.COMPLETED;
       queue.actualEndTime = new Date();
       await queue.save();
     }
 
     // Clear counter's current queue and set to available
-    counter.currentQueue = null;
-    counter.status = 'available';
+    counter.currentQueue = undefined;
+    counter.status = CounterStatus.AVAILABLE;
     await counter.save();
 
     res.status(200).json({
@@ -344,7 +344,7 @@ export const completeQueueAtCounter = async (req: AuthRequest, res: Response): P
 // @desc    Get counter statistics
 // @route   GET /api/counters/stats/overview
 // @access  Private (Admin/Staff)
-export const getCounterStats = async (req: AuthRequest, res: Response): Promise<void> => {
+export const getCounterStats = async (_req: AuthRequest, res: Response): Promise<void> => {
   try {
     const totalCounters = await Counter.countDocuments();
     const availableCounters = await Counter.countDocuments({ status: 'available' });

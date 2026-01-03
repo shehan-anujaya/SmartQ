@@ -30,8 +30,8 @@ export const register = async (req: Request, res: Response): Promise<void> => {
     });
 
     // Generate tokens
-    const accessToken = generateAccessToken(user._id, user.role);
-    const refreshToken = generateRefreshToken(user._id);
+    const accessToken = generateAccessToken(user._id.toString(), user.role);
+    const refreshToken = generateRefreshToken(user._id.toString());
 
     // Save refresh token to database
     user.refreshToken = refreshToken;
@@ -100,8 +100,8 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     }
 
     // Generate tokens
-    const accessToken = generateAccessToken(user._id, user.role);
-    const refreshToken = generateRefreshToken(user._id);
+    const accessToken = generateAccessToken(user._id.toString(), user.role);
+    const refreshToken = generateRefreshToken(user._id.toString());
 
     // Save refresh token to database
     user.refreshToken = refreshToken;
@@ -300,8 +300,8 @@ export const refreshAccessToken = async (req: Request, res: Response): Promise<v
     }
 
     // Generate new tokens
-    const newAccessToken = generateAccessToken(user._id, user.role);
-    const newRefreshToken = generateRefreshToken(user._id);
+    const newAccessToken = generateAccessToken(user._id.toString(), user.role);
+    const newRefreshToken = generateRefreshToken(user._id.toString());
 
     // Update refresh token in database
     user.refreshToken = newRefreshToken;
