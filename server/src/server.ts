@@ -12,6 +12,8 @@ import userRoutes from './routes/userRoutes';
 import serviceRoutes from './routes/serviceRoutes';
 import queueRoutes from './routes/queueRoutes';
 import appointmentRoutes from './routes/appointmentRoutes';
+import counterRoutes from './routes/counterRoutes';
+import aiRoutes from './routes/aiRoutes';
 
 // Load environment variables
 dotenv.config();
@@ -51,6 +53,8 @@ app.use('/api/users', userRoutes);
 app.use('/api/services', serviceRoutes);
 app.use('/api/queues', queueRoutes);
 app.use('/api/appointments', appointmentRoutes);
+app.use('/api/counters', counterRoutes);
+app.use('/api/ai', aiRoutes);
 
 // Error handlers
 app.use(notFound);

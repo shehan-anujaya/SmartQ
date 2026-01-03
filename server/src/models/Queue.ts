@@ -18,6 +18,11 @@ const queueSchema = new Schema<IQueue>(
       ref: 'Service',
       required: [true, 'Service is required']
     },
+    counter: {
+      type: Schema.Types.ObjectId,
+      ref: 'Counter',
+      default: null
+    },
     status: {
       type: String,
       enum: Object.values(QueueStatus),

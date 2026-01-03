@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import User from '../models/User';
 import { AuthRequest, ApiResponse } from '../types';
-import { generateToken } from '../utils/jwt';
+import { generateAccessToken, generateRefreshToken, verifyRefreshToken } from '../utils/jwt';
 
 // @desc    Register a new user
 // @route   POST /api/auth/register
@@ -29,8 +29,13 @@ export const register = async (req: Request, res: Response): Promise<void> => {
       role: role || 'customer'
     });
 
-    // Generate token
-    const token = generateToken(user._id, user.role);
+    // Generate tokens
+    const accessToken = generateAccessToken(user._id, user.role);
+    const refreshToken = generateRefreshToken(user._id);
+
+    // Save refresh token to database
+    user.refreshToken = refreshToken;
+    await user.save();
 
     res.status(201).json({
       success: true,
@@ -44,7 +49,8 @@ export const register = async (req: Request, res: Response): Promise<void> => {
           role: user.role,
           isActive: user.isActive
         },
-        token
+        accessToken,
+        refreshToken
       }
     } as ApiResponse);
   } catch (error: any) {
@@ -93,8 +99,13 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    // Generate token
-    const token = generateToken(user._id, user.role);
+    // Generate tokens
+    const accessToken = generateAccessToken(user._id, user.role);
+    const refreshToken = generateRefreshToken(user._id);
+
+    // Save refresh token to database
+    user.refreshToken = refreshToken;
+    await user.save();
 
     res.status(200).json({
       success: true,
@@ -108,7 +119,8 @@ export const login = async (req: Request, res: Response): Promise<void> => {
           role: user.role,
           isActive: user.isActive
         },
-        token
+        accessToken,
+        refreshToken
       }
     } as ApiResponse);
   } catch (error: any) {
@@ -223,6 +235,115 @@ export const changePassword = async (
     res.status(200).json({
       success: true,
       message: 'Password changed successfully'
+    } as ApiResponse);
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      error: error.message || 'Server error'
+    } as ApiResponse);
+  }
+};
+
+// @desc    Refresh access token
+// @route   POST /api/auth/refresh-token
+// @access  Public
+export const refreshAccessToken = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { refreshToken } = req.body;
+
+    if (!refreshToken) {
+      res.status(400).json({
+        success: false,
+        error: 'Refresh token is required'
+      } as ApiResponse);
+      return;
+    }
+
+    // Verify refresh token
+    let decoded;
+    try {
+      decoded = verifyRefreshToken(refreshToken);
+    } catch (error) {
+      res.status(401).json({
+        success: false,
+        error: 'Invalid or expired refresh token'
+      } as ApiResponse);
+      return;
+    }
+
+    // Find user and verify refresh token matches
+    const user = await User.findById(decoded.userId).select('+refreshToken');
+
+    if (!user) {
+      res.status(404).json({
+        success: false,
+        error: 'User not found'
+      } as ApiResponse);
+      return;
+    }
+
+    if (user.refreshToken !== refreshToken) {
+      res.status(401).json({
+        success: false,
+        error: 'Invalid refresh token'
+      } as ApiResponse);
+      return;
+    }
+
+    // Check if user is active
+    if (!user.isActive) {
+      res.status(403).json({
+        success: false,
+        error: 'Account is deactivated'
+      } as ApiResponse);
+      return;
+    }
+
+    // Generate new tokens
+    const newAccessToken = generateAccessToken(user._id, user.role);
+    const newRefreshToken = generateRefreshToken(user._id);
+
+    // Update refresh token in database
+    user.refreshToken = newRefreshToken;
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: 'Token refreshed successfully',
+      data: {
+        accessToken: newAccessToken,
+        refreshToken: newRefreshToken
+      }
+    } as ApiResponse);
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      error: error.message || 'Server error'
+    } as ApiResponse);
+  }
+};
+
+// @desc    Logout user
+// @route   POST /api/auth/logout
+// @access  Private
+export const logout = async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const userId = req.user?.userId;
+
+    if (!userId) {
+      res.status(401).json({
+        success: false,
+        error: 'Unauthorized'
+      } as ApiResponse);
+      return;
+    }
+
+    // Clear refresh token
+    await User.findByIdAndUpdate(userId, { refreshToken: null });
+
+    res.status(200).json({
+      success: true,
+      message: 'Logged out successfully'
     } as ApiResponse);
   } catch (error: any) {
     res.status(500).json({

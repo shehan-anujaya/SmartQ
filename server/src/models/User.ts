@@ -39,6 +39,10 @@ const userSchema = new Schema<IUser>(
     isActive: {
       type: Boolean,
       default: true
+    },
+    refreshToken: {
+      type: String,
+      select: false
     }
   },
   {

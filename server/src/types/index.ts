@@ -16,6 +16,7 @@ export interface IUser extends Document {
   phone: string;
   role: UserRole;
   isActive: boolean;
+  refreshToken?: string;
   createdAt: Date;
   updatedAt: Date;
   comparePassword(candidatePassword: string): Promise<boolean>;
@@ -53,6 +54,7 @@ export interface IQueue extends Document {
   queueNumber: number;
   customer: IUser['_id'];
   service: IService['_id'];
+  counter?: ICounter['_id'];
   status: QueueStatus;
   priority: number;
   estimatedTime: Date;
@@ -100,4 +102,63 @@ export interface ApiResponse<T = any> {
   message?: string;
   data?: T;
   error?: string;
+}
+
+// Counter Types
+export enum CounterStatus {
+  AVAILABLE = 'available',
+  BUSY = 'busy',
+  OFFLINE = 'offline'
+}
+
+export interface ICounter extends Document {
+  _id: string;
+  counterNumber: number;
+  name: string;
+  services: IService['_id'][];
+  status: CounterStatus;
+  currentQueue?: IQueue['_id'];
+  assignedStaff?: IUser['_id'];
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+// Queue Entry (enhanced queue with counter assignment)
+export interface IQueueEntry extends Document {
+  _id: string;
+  queueNumber: number;
+  customer: IUser['_id'];
+  service: IService['_id'];
+  counter?: ICounter['_id'];
+  status: QueueStatus;
+  priority: number;
+  estimatedTime: Date;
+  actualStartTime?: Date;
+  actualEndTime?: Date;
+  waitTimeMinutes?: number;
+  notes?: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+// AI Prediction Types
+export interface IPeakHourPrediction {
+  hour: number; // 0-23
+  dayOfWeek: number; // 0-6 (Sunday-Saturday)
+  predictedVolume: number;
+  confidence: number; // 0-1
+}
+
+export interface IWaitTimeEstimate {
+  estimatedWaitMinutes: number;
+  queuePosition: number;
+  totalAhead: number;
+  averageServiceTime: number;
+  confidence: number; // 0-1
+}
+
+export interface IAIAnalysisResult {
+  peakHours?: IPeakHourPrediction[];
+  waitTimeEstimate?: IWaitTimeEstimate;
+  timestamp: Date;
 }
