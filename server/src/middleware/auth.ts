@@ -55,6 +55,14 @@ export const protect = async (
 
     next();
   } catch (error: any) {
+    if (error.name === 'TokenExpiredError') {
+      res.status(401).json({
+        success: false,
+        error: 'Token expired, please refresh your token'
+      });
+      return;
+    }
+    
     res.status(401).json({
       success: false,
       error: 'Not authorized to access this route'
@@ -74,4 +82,44 @@ export const authorize = (...roles: string[]) => {
     }
     next();
   };
+};
+
+// Optional protection (doesn't fail if no token)
+export const optionalProtect = async (
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    let token: string | undefined;
+
+    if (
+      req.headers.authorization &&
+      req.headers.authorization.startsWith('Bearer')
+    ) {
+      token = req.headers.authorization.split(' ')[1];
+    }
+
+    if (token) {
+      const jwtSecret = process.env.JWT_SECRET;
+      if (jwtSecret) {
+        const decoded = jwt.verify(token, jwtSecret) as {
+          userId: string;
+          role: string;
+        };
+
+        const user = await User.findById(decoded.userId);
+        if (user && user.isActive) {
+          req.user = {
+            userId: decoded.userId,
+            role: decoded.role as any
+          };
+        }
+      }
+    }
+
+    next();
+  } catch (error) {
+    next();
+  }
 };

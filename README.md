@@ -204,13 +204,10 @@ SmartQ/
 - CORS configuration
 - Helmet security headers
 
-## 📝 License
-
-MIT
 
 ## 👨‍💻 Author
 
-Smart Queue Management Team
+Shehan Anujaya
 
 ## 🤝 Contributing
 
