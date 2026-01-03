@@ -9,7 +9,6 @@ export enum UserRole {
 }
 
 export interface IUser extends Document {
-  _id: string;
   name: string;
   email: string;
   password: string;
@@ -29,7 +28,6 @@ export enum ServiceStatus {
 }
 
 export interface IService extends Document {
-  _id: string;
   name: string;
   description: string;
   duration: number; // in minutes
@@ -50,7 +48,6 @@ export enum QueueStatus {
 }
 
 export interface IQueue extends Document {
-  _id: string;
   queueNumber: number;
   customer: IUser['_id'];
   service: IService['_id'];
@@ -76,7 +73,6 @@ export enum AppointmentStatus {
 }
 
 export interface IAppointment extends Document {
-  _id: string;
   customer: IUser['_id'];
   service: IService['_id'];
   appointmentDate: Date;
@@ -112,7 +108,6 @@ export enum CounterStatus {
 }
 
 export interface ICounter extends Document {
-  _id: string;
   counterNumber: number;
   name: string;
   services: IService['_id'][];
@@ -125,7 +120,6 @@ export interface ICounter extends Document {
 
 // Queue Entry (enhanced queue with counter assignment)
 export interface IQueueEntry extends Document {
-  _id: string;
   queueNumber: number;
   customer: IUser['_id'];
   service: IService['_id'];
