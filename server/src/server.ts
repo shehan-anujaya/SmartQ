@@ -39,7 +39,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 // Health check route
-app.get('/health', (req: Request, res: Response) => {
+app.get('/health', (_req: Request, res: Response) => {
   res.status(200).json({
     success: true,
     message: 'SmartQ Server is running',
