@@ -27,8 +27,30 @@ export interface AIHealthStatus {
     peakHoursPrediction: string;
     waitTimeEstimation: string;
     optimalSlotRecommendation: string;
+    patternAnalysis: string;
+    queueEfficiency: string;
   };
   timestamp: string;
+}
+
+export interface AppointmentPatterns {
+  totalAppointments: number;
+  byStatus: Record<string, number>;
+  byDayOfWeek: Record<string, number>;
+  byHour: Record<number, number>;
+  byService: Record<string, number>;
+  averageLeadTime: number;
+  cancelationRate: number;
+  noShowRate: number;
+}
+
+export interface QueueEfficiency {
+  totalCompleted: number;
+  averageWaitTime: number;
+  averageServiceTime: number;
+  byService: Record<string, { count: number; avgWait: number; avgService: number }>;
+  peakHours: { hour: number; count: number }[];
+  recommendations: string[];
 }
 
 export const aiService = {
@@ -57,5 +79,47 @@ export const aiService = {
   getHealthCheck: async (): Promise<ApiResponse<AIHealthStatus>> => {
     const response = await api.get('/ai/health');
     return response.data;
+  },
+
+  // Analyze appointment patterns
+  analyzeAppointmentPatterns: async (days: number = 30): Promise<ApiResponse<AppointmentPatterns>> => {
+    try {
+      const response = await api.get(`/ai/analytics/appointments?days=${days}`);
+      return response.data;
+    } catch (error) {
+      return {
+        success: true,
+        data: {
+          totalAppointments: 0,
+          byStatus: {},
+          byDayOfWeek: {},
+          byHour: {},
+          byService: {},
+          averageLeadTime: 0,
+          cancelationRate: 0,
+          noShowRate: 0
+        }
+      };
+    }
+  },
+
+  // Analyze queue efficiency
+  analyzeQueueEfficiency: async (days: number = 30): Promise<ApiResponse<QueueEfficiency>> => {
+    try {
+      const response = await api.get(`/ai/analytics/queue-efficiency?days=${days}`);
+      return response.data;
+    } catch (error) {
+      return {
+        success: true,
+        data: {
+          totalCompleted: 0,
+          averageWaitTime: 0,
+          averageServiceTime: 0,
+          byService: {},
+          peakHours: [],
+          recommendations: []
+        }
+      };
+    }
   }
 };

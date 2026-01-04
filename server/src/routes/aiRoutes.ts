@@ -4,7 +4,9 @@ import {
   getWaitTimeEstimate,
   getAIAnalysis,
   getOptimalSlots,
-  getAIHealthCheck
+  getAIHealthCheck,
+  analyzeAppointmentPatterns,
+  analyzeQueueEfficiency
 } from '../controllers/aiController';
 import { protect, authorize } from '../middleware/auth';
 import { UserRole } from '../types';
@@ -21,5 +23,7 @@ router.get('/optimal-slots', protect, getOptimalSlots);
 // Admin/Staff only routes
 router.get('/peak-hours', protect, authorize(UserRole.ADMIN, UserRole.STAFF), getPeakHoursPrediction);
 router.get('/analysis', protect, authorize(UserRole.ADMIN, UserRole.STAFF), getAIAnalysis);
+router.get('/analytics/appointments', protect, authorize(UserRole.ADMIN, UserRole.STAFF), analyzeAppointmentPatterns);
+router.get('/analytics/queue-efficiency', protect, authorize(UserRole.ADMIN, UserRole.STAFF), analyzeQueueEfficiency);
 
 export default router;

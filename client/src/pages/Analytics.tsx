@@ -4,6 +4,7 @@ import Card from '../components/common/Card';
 import Loading from '../components/common/Loading';
 import { useAppSelector } from '../store/hooks';
 import { aiService, PeakHourData } from '../services/aiService';
+import { AIAnalytics } from '../components/analytics/AIAnalytics';
 import api from '../services/api';
 import {
   FiUsers,
@@ -353,6 +354,11 @@ const Analytics: React.FC = () => {
             </div>
           </div>
         </Card>
+
+        {/* AI-Powered Analytics Section */}
+        <div className="mt-8">
+          <AIAnalytics />
+        </div>
       </div>
     </Layout>
   );
