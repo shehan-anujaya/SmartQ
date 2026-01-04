@@ -4,6 +4,8 @@ import { Provider } from 'react-redux';
 import { Toaster } from 'react-hot-toast';
 import { store } from './store';
 import ProtectedRoute from './components/auth/ProtectedRoute';
+import RoleGuard from './components/auth/RoleGuard';
+import { UserRole } from './types';
 
 // Pages
 import Login from './pages/auth/Login';
@@ -11,6 +13,11 @@ import Register from './pages/auth/Register';
 import Dashboard from './pages/Dashboard';
 import Appointments from './pages/Appointments';
 import Queue from './pages/Queue';
+import Analytics from './pages/Analytics';
+import Services from './pages/Services';
+import Users from './pages/Users';
+import QueueManagement from './pages/QueueManagement';
+import AppointmentManagement from './pages/AppointmentManagement';
 
 function App() {
   return (
@@ -45,7 +52,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
 
-          {/* Protected Routes */}
+          {/* Protected Routes - All authenticated users */}
           <Route
             path="/dashboard"
             element={
@@ -68,6 +75,50 @@ function App() {
               <ProtectedRoute>
                 <Queue />
               </ProtectedRoute>
+            }
+          />
+
+          {/* Admin & Staff Routes */}
+          <Route
+            path="/queue/manage"
+            element={
+              <RoleGuard allowedRoles={[UserRole.ADMIN, UserRole.STAFF]}>
+                <QueueManagement />
+              </RoleGuard>
+            }
+          />
+          <Route
+            path="/appointments/manage"
+            element={
+              <RoleGuard allowedRoles={[UserRole.ADMIN, UserRole.STAFF]}>
+                <AppointmentManagement />
+              </RoleGuard>
+            }
+          />
+
+          {/* Admin Only Routes */}
+          <Route
+            path="/analytics"
+            element={
+              <RoleGuard allowedRoles={[UserRole.ADMIN]}>
+                <Analytics />
+              </RoleGuard>
+            }
+          />
+          <Route
+            path="/services"
+            element={
+              <RoleGuard allowedRoles={[UserRole.ADMIN]}>
+                <Services />
+              </RoleGuard>
+            }
+          />
+          <Route
+            path="/users"
+            element={
+              <RoleGuard allowedRoles={[UserRole.ADMIN]}>
+                <Users />
+              </RoleGuard>
             }
           />
 

@@ -10,8 +10,7 @@ import Select from '../../components/common/Select';
 import Textarea from '../../components/common/Textarea';
 import Modal from '../../components/common/Modal';
 import Badge from '../../components/common/Badge';
-import Loading from '../../components/common/Loading';
-import { format } from 'date-fns';
+import Loading from '../../components/common/Loading';import AIBookingSuggestions from '../components/ai/AIBookingSuggestions';import { format } from 'date-fns';
 
 const Appointments: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -177,6 +176,15 @@ const Appointments: React.FC = () => {
               onChange={handleChange}
               required
             />
+
+            {/* AI Booking Suggestions */}
+            {formData.service && formData.appointmentDate && (
+              <AIBookingSuggestions
+                serviceId={formData.service}
+                selectedDate={formData.appointmentDate}
+                onSelectSlot={(time) => setFormData({ ...formData, appointmentTime: time })}
+              />
+            )}
 
             <Textarea
               label="Notes (Optional)"
