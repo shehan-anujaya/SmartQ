@@ -7,7 +7,6 @@ import {
   FiCalendar,
   FiClock,
   FiUsers,
-  FiSettings,
   FiLogOut,
   FiBarChart2,
   FiGrid,

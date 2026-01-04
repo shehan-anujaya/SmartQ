@@ -101,11 +101,13 @@ const authSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(register.fulfilled, (state, action: PayloadAction<{ user: User; token: string }>) => {
+      .addCase(register.fulfilled, (state, action) => {
         state.loading = false;
-        state.isAuthenticated = true;
-        state.user = action.payload.user;
-        state.token = action.payload.token;
+        if (action.payload) {
+          state.isAuthenticated = true;
+          state.user = action.payload.user;
+          state.token = action.payload.token;
+        }
       })
       .addCase(register.rejected, (state, action) => {
         state.loading = false;
@@ -118,11 +120,13 @@ const authSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(login.fulfilled, (state, action: PayloadAction<{ user: User; token: string }>) => {
+      .addCase(login.fulfilled, (state, action) => {
         state.loading = false;
-        state.isAuthenticated = true;
-        state.user = action.payload.user;
-        state.token = action.payload.token;
+        if (action.payload) {
+          state.isAuthenticated = true;
+          state.user = action.payload.user;
+          state.token = action.payload.token;
+        }
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
@@ -134,9 +138,11 @@ const authSlice = createSlice({
       .addCase(getMe.pending, (state) => {
         state.loading = true;
       })
-      .addCase(getMe.fulfilled, (state, action: PayloadAction<User>) => {
+      .addCase(getMe.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload;
+        if (action.payload) {
+          state.user = action.payload;
+        }
       })
       .addCase(getMe.rejected, (state, action) => {
         state.loading = false;
@@ -148,9 +154,11 @@ const authSlice = createSlice({
       .addCase(updateProfile.pending, (state) => {
         state.loading = true;
       })
-      .addCase(updateProfile.fulfilled, (state, action: PayloadAction<User>) => {
+      .addCase(updateProfile.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload;
+        if (action.payload) {
+          state.user = action.payload;
+        }
       })
       .addCase(updateProfile.rejected, (state, action) => {
         state.loading = false;

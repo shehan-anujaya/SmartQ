@@ -1,13 +1,12 @@
-import React from 'react';
-
 type BadgeVariant = 'success' | 'warning' | 'danger' | 'info';
 
-interface BadgeProps {
+export interface BadgeProps {
   children: React.ReactNode;
   variant: BadgeVariant;
+  className?: string;
 }
 
-const Badge: React.FC<BadgeProps> = ({ children, variant }) => {
+const Badge: React.FC<BadgeProps> = ({ children, variant, className = '' }) => {
   const variantClasses = {
     success: 'badge-success',
     warning: 'badge-warning',
@@ -16,7 +15,7 @@ const Badge: React.FC<BadgeProps> = ({ children, variant }) => {
   };
 
   return (
-    <span className={`badge ${variantClasses[variant]}`}>
+    <span className={`badge ${variantClasses[variant]} ${className}`}>
       {children}
     </span>
   );

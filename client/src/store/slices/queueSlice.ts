@@ -150,9 +150,11 @@ const queueSlice = createSlice({
       .addCase(getMyQueues.pending, (state) => {
         state.loading = true;
       })
-      .addCase(getMyQueues.fulfilled, (state, action: PayloadAction<Queue[]>) => {
+      .addCase(getMyQueues.fulfilled, (state, action) => {
         state.loading = false;
-        state.myQueues = action.payload;
+        if (action.payload) {
+          state.myQueues = action.payload;
+        }
       })
       .addCase(getMyQueues.rejected, (state, action) => {
         state.loading = false;
@@ -164,9 +166,11 @@ const queueSlice = createSlice({
       .addCase(getQueue.pending, (state) => {
         state.loading = true;
       })
-      .addCase(getQueue.fulfilled, (state, action: PayloadAction<Queue>) => {
+      .addCase(getQueue.fulfilled, (state, action) => {
         state.loading = false;
-        state.currentQueue = action.payload;
+        if (action.payload) {
+          state.currentQueue = action.payload;
+        }
       })
       .addCase(getQueue.rejected, (state, action) => {
         state.loading = false;
@@ -178,9 +182,11 @@ const queueSlice = createSlice({
       .addCase(joinQueue.pending, (state) => {
         state.loading = true;
       })
-      .addCase(joinQueue.fulfilled, (state, action: PayloadAction<Queue>) => {
+      .addCase(joinQueue.fulfilled, (state, action) => {
         state.loading = false;
-        state.myQueues.unshift(action.payload);
+        if (action.payload) {
+          state.myQueues.unshift(action.payload);
+        }
       })
       .addCase(joinQueue.rejected, (state, action) => {
         state.loading = false;
@@ -192,11 +198,13 @@ const queueSlice = createSlice({
       .addCase(updateQueueStatus.pending, (state) => {
         state.loading = true;
       })
-      .addCase(updateQueueStatus.fulfilled, (state, action: PayloadAction<Queue>) => {
+      .addCase(updateQueueStatus.fulfilled, (state, action) => {
         state.loading = false;
-        const index = state.queues.findIndex(q => q._id === action.payload._id);
-        if (index !== -1) {
-          state.queues[index] = action.payload;
+        if (action.payload) {
+          const index = state.queues.findIndex(q => q._id === action.payload._id);
+          if (index !== -1) {
+            state.queues[index] = action.payload;
+          }
         }
       })
       .addCase(updateQueueStatus.rejected, (state, action) => {

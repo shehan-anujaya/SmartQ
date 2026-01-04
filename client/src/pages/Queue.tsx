@@ -1,16 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { getMyQueues, joinQueue, cancelQueue } from '../../store/slices/queueSlice';
-import { getServices } from '../../store/slices/serviceSlice';
-import Layout from '../../components/layout/Layout';
-import Card from '../../components/common/Card';
-import Button from '../../components/common/Button';
-import Select from '../../components/common/Select';
-import Textarea from '../../components/common/Textarea';
-import Modal from '../../components/common/Modal';
-import Badge from '../../components/common/Badge';
-import Loading from '../../components/common/Loading';
+import { useEffect, useState } from 'react';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { getMyQueues, joinQueue, cancelQueue } from '../store/slices/queueSlice';
+import { getServices } from '../store/slices/serviceSlice';
+import Layout from '../components/layout/Layout';
+import Card from '../components/common/Card';
+import Button from '../components/common/Button';
+import Select from '../components/common/Select';
+import Textarea from '../components/common/Textarea';
+import Modal from '../components/common/Modal';
+import Badge from '../components/common/Badge';
+import Loading from '../components/common/Loading';
+import QueuePositionCard from '../components/queue/QueuePositionCard';
+import { RootState } from '../store';
+import { Queue as QueueType, Service } from '../types';
 import { format } from 'date-fns';
+import { FiRefreshCw } from 'react-icons/fi';
 
 const Queue: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -25,6 +29,13 @@ const Queue: React.FC = () => {
   useEffect(() => {
     dispatch(getMyQueues());
     dispatch(getServices({ status: 'active' }));
+    
+    // Auto-refresh every 30 seconds for real-time updates
+    const interval = setInterval(() => {
+      dispatch(getMyQueues());
+    }, 30000);
+    
+    return () => clearInterval(interval);
   }, [dispatch]);
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -73,9 +84,15 @@ const Queue: React.FC = () => {
       <div className="space-y-6">
         <div className="flex justify-between items-center">
           <h1 className="text-3xl font-bold text-gray-900">My Queue</h1>
-          <Button onClick={() => setIsModalOpen(true)}>
-            Join Queue
-          </Button>
+          <div className="flex space-x-3">
+            <Button variant="secondary" onClick={() => dispatch(getMyQueues())}>
+              <FiRefreshCw className="mr-2" />
+              Refresh
+            </Button>
+            <Button onClick={() => setIsModalOpen(true)}>
+              Join Queue
+            </Button>
+          </div>
         </div>
 
         {/* Active Queues */}
@@ -94,47 +111,19 @@ const Queue: React.FC = () => {
             </Card>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {activeQueues.map((queue) => (
-                <Card key={queue._id}>
-                  <div className="space-y-3">
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <h3 className="font-semibold text-lg text-gray-900">
-                          Queue #{queue.queueNumber}
-                        </h3>
-                        <p className="text-sm text-gray-600">{queue.service.name}</p>
-                      </div>
-                      <Badge variant={getStatusBadge(queue.status)}>
-                        {queue.status.replace('_', ' ')}
-                      </Badge>
-                    </div>
-
-                    <div className="space-y-2 text-sm text-gray-600">
-                      <p>
-                        <span className="font-medium">Estimated Time:</span>{' '}
-                        {format(new Date(queue.estimatedTime), 'HH:mm')}
-                      </p>
-                      <p>
-                        <span className="font-medium">Duration:</span> {queue.service.duration} mins
-                      </p>
-                      {queue.notes && (
-                        <p>
-                          <span className="font-medium">Notes:</span> {queue.notes}
-                        </p>
-                      )}
-                    </div>
-
-                    {queue.status === 'waiting' && (
-                      <Button
-                        variant="danger"
-                        fullWidth
-                        onClick={() => handleCancel(queue._id)}
-                      >
-                        Leave Queue
-                      </Button>
-                    )}
-                  </div>
-                </Card>
+              {activeQueues.map((queue, index) => (
+                <div key={queue._id} className="space-y-4">
+                  <QueuePositionCard queue={queue} position={index + 1} />
+                  {queue.status === 'waiting' && (
+                    <Button
+                      variant="danger"
+                      fullWidth
+                      onClick={() => handleCancel(queue._id)}
+                    >
+                      Leave Queue
+                    </Button>
+                  )}
+                </div>
               ))}
             </div>
           )}

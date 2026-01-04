@@ -1,13 +1,13 @@
-import React, { useEffect } from 'react';
-import { useAppSelector, useAppDispatch } from '../../store/hooks';
-import { getServices } from '../../store/slices/serviceSlice';
-import { getMyQueues } from '../../store/slices/queueSlice';
-import { getMyAppointments } from '../../store/slices/appointmentSlice';
-import { getQueueStats } from '../../store/slices/queueSlice';
-import { getAppointmentStats } from '../../store/slices/appointmentSlice';
-import Layout from '../../components/layout/Layout';
-import Card from '../../components/common/Card';
-import Loading from '../../components/common/Loading';
+import { useEffect } from 'react';
+import { useAppSelector, useAppDispatch } from '../store/hooks';
+import { getServices } from '../store/slices/serviceSlice';
+import { getMyQueues, getQueueStats } from '../store/slices/queueSlice';
+import { getMyAppointments, getAppointmentStats } from '../store/slices/appointmentSlice';
+import Layout from '../components/layout/Layout';
+import Card from '../components/common/Card';
+import Loading from '../components/common/Loading';
+import { RootState } from '../store';
+import { Appointment } from '../types';
 import { FiCalendar, FiClock, FiCheckCircle, FiUsers } from 'react-icons/fi';
 
 const Dashboard: React.FC = () => {

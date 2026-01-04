@@ -47,7 +47,7 @@ interface AnalyticsData {
 }
 
 const Analytics: React.FC = () => {
-  const { user } = useAppSelector((state) => state.auth);
+  useAppSelector((state) => state.auth); // Auth check for route protection
   const [loading, setLoading] = useState(true);
   const [analytics, setAnalytics] = useState<AnalyticsData | null>(null);
   const [peakHours, setPeakHours] = useState<PeakHourData[]>([]);

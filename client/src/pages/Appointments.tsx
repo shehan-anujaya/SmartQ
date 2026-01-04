@@ -1,16 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { getMyAppointments, createAppointment, cancelAppointment } from '../../store/slices/appointmentSlice';
-import { getServices } from '../../store/slices/serviceSlice';
-import Layout from '../../components/layout/Layout';
-import Card from '../../components/common/Card';
-import Button from '../../components/common/Button';
-import Input from '../../components/common/Input';
-import Select from '../../components/common/Select';
-import Textarea from '../../components/common/Textarea';
-import Modal from '../../components/common/Modal';
-import Badge from '../../components/common/Badge';
-import Loading from '../../components/common/Loading';import AIBookingSuggestions from '../components/ai/AIBookingSuggestions';import { format } from 'date-fns';
+import { useEffect, useState } from 'react';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { getMyAppointments, createAppointment, cancelAppointment } from '../store/slices/appointmentSlice';
+import { getServices } from '../store/slices/serviceSlice';
+import Layout from '../components/layout/Layout';
+import Card from '../components/common/Card';
+import Button from '../components/common/Button';
+import Input from '../components/common/Input';
+import Select from '../components/common/Select';
+import Textarea from '../components/common/Textarea';
+import Modal from '../components/common/Modal';
+import Badge from '../components/common/Badge';
+import Loading from '../components/common/Loading';
+import AIBookingSuggestions from '../components/ai/AIBookingSuggestions';
+import { format } from 'date-fns';
+import { RootState } from '../store';
+import { Appointment, Service } from '../types';
 
 const Appointments: React.FC = () => {
   const dispatch = useAppDispatch();

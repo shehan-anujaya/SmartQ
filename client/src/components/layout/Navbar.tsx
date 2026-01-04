@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { logout } from '../../store/slices/authSlice';
-import { FiHome, FiCalendar, FiClock, FiSettings, FiLogOut, FiMenu, FiX } from 'react-icons/fi';
+import { FiHome, FiCalendar, FiClock, FiLogOut, FiMenu, FiX } from 'react-icons/fi';
 
 const Navbar: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);

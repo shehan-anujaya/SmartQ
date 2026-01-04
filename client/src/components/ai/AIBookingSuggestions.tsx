@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { aiService, OptimalSlot } from '../../services/aiService';
-import { FiClock, FiStar, FiCheckCircle } from 'react-icons/fi';
+import { FiClock, FiStar } from 'react-icons/fi';
 import Loading from '../common/Loading';
 
 interface AIBookingSuggestionsProps {

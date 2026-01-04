@@ -10,7 +10,7 @@ import Loading from '../components/common/Loading';
 import { FiPlus, FiEdit2, FiTrash2, FiSearch, FiMail, FiPhone } from 'react-icons/fi';
 import api from '../services/api';
 import toast from 'react-hot-toast';
-import { User, UserRole } from '../types';
+import { User } from '../types';
 
 const Users: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
