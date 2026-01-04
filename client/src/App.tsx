@@ -1,8 +1,11 @@
 
+import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { Toaster } from 'react-hot-toast';
 import { store } from './store';
+import { useAppDispatch, useAppSelector } from './store/hooks';
+import { getMe } from './store/slices/authSlice';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import RoleGuard from './components/auth/RoleGuard';
 import { UserRole } from './types';
@@ -19,9 +22,21 @@ import Users from './pages/Users';
 import QueueManagement from './pages/QueueManagement';
 import AppointmentManagement from './pages/AppointmentManagement';
 
-function App() {
+function AppContent() {
+  const dispatch = useAppDispatch();
+  const { token, isAuthenticated } = useAppSelector((state) => state.auth);
+
+  // Verify token on app mount
+  useEffect(() => {
+    if (token && isAuthenticated) {
+      dispatch(getMe()).catch(() => {
+        // Token is invalid, user will be redirected by API interceptor
+      });
+    }
+  }, []);
+
   return (
-    <Provider store={store}>
+    <>
       <BrowserRouter>
         <Toaster
           position="top-right"
@@ -127,6 +142,14 @@ function App() {
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>
       </BrowserRouter>
+    </>
+  );
+}
+
+function App() {
+  return (
+    <Provider store={store}>
+      <AppContent />
     </Provider>
   );
 }

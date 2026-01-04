@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { register } from '../../store/slices/authSlice';
@@ -15,7 +15,14 @@ const Register: React.FC = () => {
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { loading } = useAppSelector((state) => state.auth);
+  const { loading, isAuthenticated } = useAppSelector((state) => state.auth);
+
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/dashboard', { replace: true });
+    }
+  }, [isAuthenticated, navigate]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
