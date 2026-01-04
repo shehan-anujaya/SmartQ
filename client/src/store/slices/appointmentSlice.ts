@@ -174,9 +174,11 @@ const appointmentSlice = createSlice({
       .addCase(getMyAppointments.pending, (state) => {
         state.loading = true;
       })
-      .addCase(getMyAppointments.fulfilled, (state, action: PayloadAction<Appointment[]>) => {
+      .addCase(getMyAppointments.fulfilled, (state, action) => {
         state.loading = false;
-        state.myAppointments = action.payload;
+        if (action.payload) {
+          state.myAppointments = action.payload;
+        }
       })
       .addCase(getMyAppointments.rejected, (state, action) => {
         state.loading = false;
@@ -188,9 +190,11 @@ const appointmentSlice = createSlice({
       .addCase(getAppointment.pending, (state) => {
         state.loading = true;
       })
-      .addCase(getAppointment.fulfilled, (state, action: PayloadAction<Appointment>) => {
+      .addCase(getAppointment.fulfilled, (state, action) => {
         state.loading = false;
-        state.currentAppointment = action.payload;
+        if (action.payload) {
+          state.currentAppointment = action.payload;
+        }
       })
       .addCase(getAppointment.rejected, (state, action) => {
         state.loading = false;
@@ -202,9 +206,11 @@ const appointmentSlice = createSlice({
       .addCase(createAppointment.pending, (state) => {
         state.loading = true;
       })
-      .addCase(createAppointment.fulfilled, (state, action: PayloadAction<Appointment>) => {
+      .addCase(createAppointment.fulfilled, (state, action) => {
         state.loading = false;
-        state.myAppointments.unshift(action.payload);
+        if (action.payload) {
+          state.myAppointments.unshift(action.payload);
+        }
       })
       .addCase(createAppointment.rejected, (state, action) => {
         state.loading = false;
@@ -216,11 +222,13 @@ const appointmentSlice = createSlice({
       .addCase(updateAppointment.pending, (state) => {
         state.loading = true;
       })
-      .addCase(updateAppointment.fulfilled, (state, action: PayloadAction<Appointment>) => {
+      .addCase(updateAppointment.fulfilled, (state, action) => {
         state.loading = false;
-        const index = state.appointments.findIndex(a => a._id === action.payload._id);
-        if (index !== -1) {
-          state.appointments[index] = action.payload;
+        if (action.payload) {
+          const index = state.appointments.findIndex(a => a._id === action.payload!._id);
+          if (index !== -1) {
+            state.appointments[index] = action.payload;
+          }
         }
       })
       .addCase(updateAppointment.rejected, (state, action) => {
@@ -233,11 +241,13 @@ const appointmentSlice = createSlice({
       .addCase(updateAppointmentStatus.pending, (state) => {
         state.loading = true;
       })
-      .addCase(updateAppointmentStatus.fulfilled, (state, action: PayloadAction<Appointment>) => {
+      .addCase(updateAppointmentStatus.fulfilled, (state, action) => {
         state.loading = false;
-        const index = state.appointments.findIndex(a => a._id === action.payload._id);
-        if (index !== -1) {
-          state.appointments[index] = action.payload;
+        if (action.payload) {
+          const index = state.appointments.findIndex(a => a._id === action.payload!._id);
+          if (index !== -1) {
+            state.appointments[index] = action.payload;
+          }
         }
       })
       .addCase(updateAppointmentStatus.rejected, (state, action) => {
@@ -250,9 +260,11 @@ const appointmentSlice = createSlice({
       .addCase(cancelAppointment.pending, (state) => {
         state.loading = true;
       })
-      .addCase(cancelAppointment.fulfilled, (state, action: PayloadAction<string>) => {
+      .addCase(cancelAppointment.fulfilled, (state, action) => {
         state.loading = false;
-        state.myAppointments = state.myAppointments.filter(a => a._id !== action.payload);
+        if (action.payload) {
+          state.myAppointments = state.myAppointments.filter(a => a._id !== action.payload);
+        }
       })
       .addCase(cancelAppointment.rejected, (state, action) => {
         state.loading = false;
@@ -266,7 +278,7 @@ const appointmentSlice = createSlice({
       })
       .addCase(getAppointmentStats.fulfilled, (state, action) => {
         state.loading = false;
-        state.stats = action.payload;
+        state.stats = action.payload ?? null;
       })
       .addCase(getAppointmentStats.rejected, (state, action) => {
         state.loading = false;

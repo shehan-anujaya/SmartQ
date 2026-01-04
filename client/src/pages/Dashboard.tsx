@@ -12,10 +12,10 @@ import { FiCalendar, FiClock, FiCheckCircle, FiUsers } from 'react-icons/fi';
 
 const Dashboard: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { user } = useAppSelector((state) => state.auth);
-  const { myQueues, stats: queueStats, loading: queueLoading } = useAppSelector((state) => state.queues);
+  const { user } = useAppSelector((state: RootState) => state.auth);
+  const { myQueues, stats: queueStats, loading: queueLoading } = useAppSelector((state: RootState) => state.queues);
   const { myAppointments, stats: appointmentStats, loading: appointmentLoading } = useAppSelector(
-    (state) => state.appointments
+    (state: RootState) => state.appointments
   );
 
   useEffect(() => {

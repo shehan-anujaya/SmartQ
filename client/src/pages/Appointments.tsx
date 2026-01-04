@@ -18,8 +18,8 @@ import { Appointment, Service } from '../types';
 
 const Appointments: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { myAppointments, loading } = useAppSelector((state) => state.appointments);
-  const { services } = useAppSelector((state) => state.services);
+  const { myAppointments, loading } = useAppSelector((state: RootState) => state.appointments);
+  const { services } = useAppSelector((state: RootState) => state.services);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({
     service: '',

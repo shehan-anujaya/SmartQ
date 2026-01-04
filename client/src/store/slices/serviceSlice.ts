@@ -120,9 +120,11 @@ const serviceSlice = createSlice({
       .addCase(getService.pending, (state) => {
         state.loading = true;
       })
-      .addCase(getService.fulfilled, (state, action: PayloadAction<Service>) => {
+      .addCase(getService.fulfilled, (state, action) => {
         state.loading = false;
-        state.currentService = action.payload;
+        if (action.payload) {
+          state.currentService = action.payload;
+        }
       })
       .addCase(getService.rejected, (state, action) => {
         state.loading = false;
@@ -134,9 +136,11 @@ const serviceSlice = createSlice({
       .addCase(createService.pending, (state) => {
         state.loading = true;
       })
-      .addCase(createService.fulfilled, (state, action: PayloadAction<Service>) => {
+      .addCase(createService.fulfilled, (state, action) => {
         state.loading = false;
-        state.services.unshift(action.payload);
+        if (action.payload) {
+          state.services.unshift(action.payload);
+        }
       })
       .addCase(createService.rejected, (state, action) => {
         state.loading = false;
@@ -148,14 +152,16 @@ const serviceSlice = createSlice({
       .addCase(updateService.pending, (state) => {
         state.loading = true;
       })
-      .addCase(updateService.fulfilled, (state, action: PayloadAction<Service>) => {
+      .addCase(updateService.fulfilled, (state, action) => {
         state.loading = false;
-        const index = state.services.findIndex(s => s._id === action.payload._id);
-        if (index !== -1) {
-          state.services[index] = action.payload;
-        }
-        if (state.currentService?._id === action.payload._id) {
-          state.currentService = action.payload;
+        if (action.payload) {
+          const index = state.services.findIndex(s => s._id === action.payload!._id);
+          if (index !== -1) {
+            state.services[index] = action.payload;
+          }
+          if (state.currentService?._id === action.payload._id) {
+            state.currentService = action.payload;
+          }
         }
       })
       .addCase(updateService.rejected, (state, action) => {
@@ -168,9 +174,11 @@ const serviceSlice = createSlice({
       .addCase(deleteService.pending, (state) => {
         state.loading = true;
       })
-      .addCase(deleteService.fulfilled, (state, action: PayloadAction<string>) => {
+      .addCase(deleteService.fulfilled, (state, action) => {
         state.loading = false;
-        state.services = state.services.filter(s => s._id !== action.payload);
+        if (action.payload) {
+          state.services = state.services.filter(s => s._id !== action.payload);
+        }
       })
       .addCase(deleteService.rejected, (state, action) => {
         state.loading = false;

@@ -233,7 +233,7 @@ const queueSlice = createSlice({
       })
       .addCase(getQueueStats.fulfilled, (state, action) => {
         state.loading = false;
-        state.stats = action.payload;
+        state.stats = action.payload ?? null;
       })
       .addCase(getQueueStats.rejected, (state, action) => {
         state.loading = false;
