@@ -107,8 +107,18 @@ const serviceSlice = createSlice({
       })
       .addCase(getServices.fulfilled, (state, action) => {
         state.loading = false;
-        state.services = action.payload.services;
-        state.pagination = action.payload.pagination;
+        // Handle both direct array and nested object response
+        if (action.payload?.data?.services) {
+          state.services = action.payload.data.services;
+          state.pagination = action.payload.data.pagination;
+        } else if (Array.isArray(action.payload?.data)) {
+          state.services = action.payload.data;
+        } else if (action.payload?.services) {
+          state.services = action.payload.services;
+          state.pagination = action.payload.pagination;
+        } else if (Array.isArray(action.payload)) {
+          state.services = action.payload;
+        }
       })
       .addCase(getServices.rejected, (state, action) => {
         state.loading = false;

@@ -161,8 +161,13 @@ const appointmentSlice = createSlice({
       })
       .addCase(getAppointments.fulfilled, (state, action) => {
         state.loading = false;
-        state.appointments = action.payload.appointments;
-        state.pagination = action.payload.pagination;
+        if (action.payload?.data?.appointments) {
+          state.appointments = action.payload.data.appointments;
+          state.pagination = action.payload.data.pagination;
+        } else if (action.payload?.appointments) {
+          state.appointments = action.payload.appointments;
+          state.pagination = action.payload.pagination;
+        }
       })
       .addCase(getAppointments.rejected, (state, action) => {
         state.loading = false;
@@ -176,7 +181,9 @@ const appointmentSlice = createSlice({
       })
       .addCase(getMyAppointments.fulfilled, (state, action) => {
         state.loading = false;
-        if (action.payload) {
+        if (action.payload?.data) {
+          state.myAppointments = Array.isArray(action.payload.data) ? action.payload.data : [];
+        } else if (Array.isArray(action.payload)) {
           state.myAppointments = action.payload;
         }
       })
@@ -208,8 +215,9 @@ const appointmentSlice = createSlice({
       })
       .addCase(createAppointment.fulfilled, (state, action) => {
         state.loading = false;
-        if (action.payload) {
-          state.myAppointments.unshift(action.payload);
+        const appointment = action.payload?.data || action.payload;
+        if (appointment) {
+          state.myAppointments.unshift(appointment);
         }
       })
       .addCase(createAppointment.rejected, (state, action) => {
@@ -224,10 +232,11 @@ const appointmentSlice = createSlice({
       })
       .addCase(updateAppointment.fulfilled, (state, action) => {
         state.loading = false;
-        if (action.payload) {
-          const index = state.appointments.findIndex(a => a._id === action.payload!._id);
+        const updatedAppointment = action.payload?.data || action.payload;
+        if (updatedAppointment) {
+          const index = state.appointments.findIndex(a => a._id === updatedAppointment._id);
           if (index !== -1) {
-            state.appointments[index] = action.payload;
+            state.appointments[index] = updatedAppointment;
           }
         }
       })
@@ -243,10 +252,11 @@ const appointmentSlice = createSlice({
       })
       .addCase(updateAppointmentStatus.fulfilled, (state, action) => {
         state.loading = false;
-        if (action.payload) {
-          const index = state.appointments.findIndex(a => a._id === action.payload!._id);
+        const updatedAppointment = action.payload?.data || action.payload;
+        if (updatedAppointment) {
+          const index = state.appointments.findIndex(a => a._id === updatedAppointment._id);
           if (index !== -1) {
-            state.appointments[index] = action.payload;
+            state.appointments[index] = updatedAppointment;
           }
         }
       })
@@ -278,7 +288,7 @@ const appointmentSlice = createSlice({
       })
       .addCase(getAppointmentStats.fulfilled, (state, action) => {
         state.loading = false;
-        state.stats = action.payload ?? null;
+        state.stats = action.payload?.data || action.payload || null;
       })
       .addCase(getAppointmentStats.rejected, (state, action) => {
         state.loading = false;

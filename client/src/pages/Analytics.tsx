@@ -65,6 +65,9 @@ const Analytics: React.FC = () => {
 
         const peakHoursRes = await aiService.getPeakHours();
 
+        // Extract services array from nested response structure
+        const servicesArray = servicesRes.data?.data?.services || servicesRes.data?.data || [];
+
         setAnalytics({
           users: usersRes.data.data || {
             total: 0,
@@ -90,8 +93,8 @@ const Analytics: React.FC = () => {
             todayCount: 0
           },
           services: {
-            total: servicesRes.data.data?.length || 0,
-            active: servicesRes.data.data?.filter((s: any) => s.status === 'active').length || 0,
+            total: Array.isArray(servicesArray) ? servicesArray.length : 0,
+            active: Array.isArray(servicesArray) ? servicesArray.filter((s: any) => s.status === 'active').length : 0,
             topServices: []
           }
         });

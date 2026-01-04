@@ -137,8 +137,13 @@ const queueSlice = createSlice({
       })
       .addCase(getQueues.fulfilled, (state, action) => {
         state.loading = false;
-        state.queues = action.payload.queues;
-        state.pagination = action.payload.pagination;
+        if (action.payload?.data?.queues) {
+          state.queues = action.payload.data.queues;
+          state.pagination = action.payload.data.pagination;
+        } else if (action.payload?.queues) {
+          state.queues = action.payload.queues;
+          state.pagination = action.payload.pagination;
+        }
       })
       .addCase(getQueues.rejected, (state, action) => {
         state.loading = false;
@@ -152,7 +157,9 @@ const queueSlice = createSlice({
       })
       .addCase(getMyQueues.fulfilled, (state, action) => {
         state.loading = false;
-        if (action.payload) {
+        if (action.payload?.data) {
+          state.myQueues = Array.isArray(action.payload.data) ? action.payload.data : [];
+        } else if (Array.isArray(action.payload)) {
           state.myQueues = action.payload;
         }
       })
@@ -184,8 +191,9 @@ const queueSlice = createSlice({
       })
       .addCase(joinQueue.fulfilled, (state, action) => {
         state.loading = false;
-        if (action.payload) {
-          state.myQueues.unshift(action.payload);
+        const queue = action.payload?.data || action.payload;
+        if (queue) {
+          state.myQueues.unshift(queue);
         }
       })
       .addCase(joinQueue.rejected, (state, action) => {
@@ -200,10 +208,11 @@ const queueSlice = createSlice({
       })
       .addCase(updateQueueStatus.fulfilled, (state, action) => {
         state.loading = false;
-        if (action.payload) {
-          const index = state.queues.findIndex(q => q._id === action.payload!._id);
+        const updatedQueue = action.payload?.data || action.payload;
+        if (updatedQueue) {
+          const index = state.queues.findIndex(q => q._id === updatedQueue._id);
           if (index !== -1) {
-            state.queues[index] = action.payload;
+            state.queues[index] = updatedQueue;
           }
         }
       })
@@ -235,7 +244,7 @@ const queueSlice = createSlice({
       })
       .addCase(getQueueStats.fulfilled, (state, action) => {
         state.loading = false;
-        state.stats = action.payload ?? null;
+        state.stats = action.payload?.data || action.payload || null;
       })
       .addCase(getQueueStats.rejected, (state, action) => {
         state.loading = false;

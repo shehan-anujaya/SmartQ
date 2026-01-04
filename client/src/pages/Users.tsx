@@ -36,7 +36,9 @@ const Users: React.FC = () => {
       if (roleFilter) params.role = roleFilter;
 
       const response = await api.get('/users', { params });
-      setUsers(response.data.data || []);
+      // Handle nested response structure: { success: true, data: { users: [...], pagination: {...} } }
+      const usersData = response.data?.data?.users || response.data?.data || [];
+      setUsers(Array.isArray(usersData) ? usersData : []);
     } catch (error) {
       console.error('Failed to fetch users:', error);
       toast.error('Failed to fetch users');
