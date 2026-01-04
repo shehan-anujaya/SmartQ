@@ -1,5 +1,5 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { QueueState, Queue } from '../../types';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { QueueState } from '../../types';
 import { queueService } from '../../services/queueService';
 import toast from 'react-hot-toast';
 
@@ -201,7 +201,7 @@ const queueSlice = createSlice({
       .addCase(updateQueueStatus.fulfilled, (state, action) => {
         state.loading = false;
         if (action.payload) {
-          const index = state.queues.findIndex(q => q._id === action.payload._id);
+          const index = state.queues.findIndex(q => q._id === action.payload!._id);
           if (index !== -1) {
             state.queues[index] = action.payload;
           }
@@ -217,9 +217,11 @@ const queueSlice = createSlice({
       .addCase(cancelQueue.pending, (state) => {
         state.loading = true;
       })
-      .addCase(cancelQueue.fulfilled, (state, action: PayloadAction<string>) => {
+      .addCase(cancelQueue.fulfilled, (state, action) => {
         state.loading = false;
-        state.myQueues = state.myQueues.filter(q => q._id !== action.payload);
+        if (action.payload) {
+          state.myQueues = state.myQueues.filter(q => q._id !== action.payload);
+        }
       })
       .addCase(cancelQueue.rejected, (state, action) => {
         state.loading = false;

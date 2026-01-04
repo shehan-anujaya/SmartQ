@@ -18,8 +18,8 @@ import { FiRefreshCw } from 'react-icons/fi';
 
 const Queue: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { myQueues, loading } = useAppSelector((state) => state.queues);
-  const { services } = useAppSelector((state) => state.services);
+  const { myQueues, loading } = useAppSelector((state: RootState) => state.queues);
+  const { services } = useAppSelector((state: RootState) => state.services);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({
     service: '',
@@ -76,8 +76,8 @@ const Queue: React.FC = () => {
     return variants[status] || 'info';
   };
 
-  const activeQueues = myQueues.filter(q => q.status === 'waiting' || q.status === 'in_progress');
-  const pastQueues = myQueues.filter(q => q.status === 'completed' || q.status === 'cancelled');
+  const activeQueues = myQueues.filter((q: QueueType) => q.status === 'waiting' || q.status === 'in_progress');
+  const pastQueues = myQueues.filter((q: QueueType) => q.status === 'completed' || q.status === 'cancelled');
 
   return (
     <Layout>
@@ -111,7 +111,7 @@ const Queue: React.FC = () => {
             </Card>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {activeQueues.map((queue, index) => (
+              {activeQueues.map((queue: QueueType, index: number) => (
                 <div key={queue._id} className="space-y-4">
                   <QueuePositionCard queue={queue} position={index + 1} />
                   {queue.status === 'waiting' && (
@@ -134,7 +134,7 @@ const Queue: React.FC = () => {
           <div>
             <h2 className="text-xl font-semibold text-gray-900 mb-4">Past Queues</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {pastQueues.map((queue) => (
+              {pastQueues.map((queue: QueueType) => (
                 <Card key={queue._id} className="opacity-75">
                   <div className="space-y-3">
                     <div className="flex justify-between items-start">
@@ -179,7 +179,7 @@ const Queue: React.FC = () => {
               name="service"
               value={formData.service}
               onChange={handleChange}
-              options={services.map(s => ({ value: s._id, label: `${s.name} (${s.duration} mins)` }))}
+              options={services.map((s: Service) => ({ value: s._id, label: `${s.name} (${s.duration} mins)` }))}
               required
             />
 

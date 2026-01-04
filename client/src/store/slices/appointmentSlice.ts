@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { AppointmentState, Appointment } from '../../types';
 import { appointmentService } from '../../services/appointmentService';
 import toast from 'react-hot-toast';

@@ -7,7 +7,7 @@ import Layout from '../components/layout/Layout';
 import Card from '../components/common/Card';
 import Loading from '../components/common/Loading';
 import { RootState } from '../store';
-import { Appointment } from '../types';
+import { Appointment, Queue } from '../types';
 import { FiCalendar, FiClock, FiCheckCircle, FiUsers } from 'react-icons/fi';
 
 const Dashboard: React.FC = () => {
@@ -41,13 +41,13 @@ const Dashboard: React.FC = () => {
         },
         {
           label: 'Active Queues',
-          value: myQueues.filter(q => q.status === 'waiting' || q.status === 'in_progress').length,
+          value: myQueues.filter((q: Queue) => q.status === 'waiting' || q.status === 'in_progress').length,
           icon: FiClock,
           color: 'bg-green-500'
         },
         {
           label: 'Completed',
-          value: myQueues.filter(q => q.status === 'completed').length,
+          value: myQueues.filter((q: Queue) => q.status === 'completed').length,
           icon: FiCheckCircle,
           color: 'bg-purple-500'
         }
@@ -159,7 +159,7 @@ const Dashboard: React.FC = () => {
             {user?.role === 'customer' ? (
               <div className="space-y-3">
                 {myAppointments.slice(0, 3).length > 0 ? (
-                  myAppointments.slice(0, 3).map((appointment) => (
+                  myAppointments.slice(0, 3).map((appointment: Appointment) => (
                     <div
                       key={appointment._id}
                       className="p-3 border border-gray-200 rounded-lg"

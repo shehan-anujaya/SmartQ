@@ -99,7 +99,7 @@ const Appointments: React.FC = () => {
           </Card>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {myAppointments.map((appointment) => (
+            {myAppointments.map((appointment: Appointment) => (
               <Card key={appointment._id}>
                 <div className="space-y-3">
                   <div className="flex justify-between items-start">
@@ -158,7 +158,7 @@ const Appointments: React.FC = () => {
               name="service"
               value={formData.service}
               onChange={handleChange}
-              options={services.map(s => ({ value: s._id, label: `${s.name} - $${s.price} (${s.duration} mins)` }))}
+              options={services.map((s: Service) => ({ value: s._id, label: `${s.name} - $${s.price} (${s.duration} mins)` }))}
               required
             />
 
