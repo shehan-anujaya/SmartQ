@@ -49,7 +49,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
           role: user.role,
           isActive: user.isActive
         },
-        accessToken,
+        token: accessToken,
         refreshToken
       }
     } as ApiResponse);
@@ -119,7 +119,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
           role: user.role,
           isActive: user.isActive
         },
-        accessToken,
+        token: accessToken,
         refreshToken
       }
     } as ApiResponse);
@@ -311,7 +311,7 @@ export const refreshAccessToken = async (req: Request, res: Response): Promise<v
       success: true,
       message: 'Token refreshed successfully',
       data: {
-        accessToken: newAccessToken,
+        token: newAccessToken,
         refreshToken: newRefreshToken
       }
     } as ApiResponse);
