@@ -19,7 +19,7 @@ export const getQueues = createAsyncThunk(
   async (params: any = {}, { rejectWithValue }) => {
     try {
       const response = await queueService.getQueues(params);
-      return response.data;
+      return response.data.data || response.data;
     } catch (error: any) {
       const message = error.response?.data?.error || 'Failed to fetch queues';
       return rejectWithValue(message);
@@ -33,7 +33,7 @@ export const getMyQueues = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await queueService.getMyQueues();
-      return response.data;
+      return response.data.data || response.data;
     } catch (error: any) {
       const message = error.response?.data?.error || 'Failed to fetch queues';
       return rejectWithValue(message);
@@ -47,7 +47,7 @@ export const getQueue = createAsyncThunk(
   async (id: string, { rejectWithValue }) => {
     try {
       const response = await queueService.getQueue(id);
-      return response.data;
+      return response.data.data || response.data;
     } catch (error: any) {
       const message = error.response?.data?.error || 'Failed to fetch queue';
       return rejectWithValue(message);
@@ -62,7 +62,7 @@ export const joinQueue = createAsyncThunk(
     try {
       const response = await queueService.joinQueue(data);
       toast.success('Successfully joined queue!');
-      return response.data;
+      return response.data.data || response.data;
     } catch (error: any) {
       const message = error.response?.data?.error || 'Failed to join queue';
       toast.error(message);
@@ -78,7 +78,7 @@ export const updateQueueStatus = createAsyncThunk(
     try {
       const response = await queueService.updateQueueStatus(id, status);
       toast.success('Queue status updated!');
-      return response.data;
+      return response.data.data || response.data;
     } catch (error: any) {
       const message = error.response?.data?.error || 'Failed to update queue';
       toast.error(message);
@@ -109,7 +109,7 @@ export const getQueueStats = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await queueService.getQueueStats();
-      return response.data;
+      return response.data.data || response.data;
     } catch (error: any) {
       const message = error.response?.data?.error || 'Failed to fetch statistics';
       return rejectWithValue(message);
@@ -157,11 +157,7 @@ const queueSlice = createSlice({
       })
       .addCase(getMyQueues.fulfilled, (state, action) => {
         state.loading = false;
-        if (action.payload?.data) {
-          state.myQueues = Array.isArray(action.payload.data) ? action.payload.data : [];
-        } else if (Array.isArray(action.payload)) {
-          state.myQueues = action.payload;
-        }
+        state.myQueues = Array.isArray(action.payload) ? action.payload : [];
       })
       .addCase(getMyQueues.rejected, (state, action) => {
         state.loading = false;
@@ -191,9 +187,8 @@ const queueSlice = createSlice({
       })
       .addCase(joinQueue.fulfilled, (state, action) => {
         state.loading = false;
-        const queue = action.payload?.data || action.payload;
-        if (queue) {
-          state.myQueues.unshift(queue);
+        if (action.payload) {
+          state.myQueues.unshift(action.payload);
         }
       })
       .addCase(joinQueue.rejected, (state, action) => {
@@ -208,11 +203,10 @@ const queueSlice = createSlice({
       })
       .addCase(updateQueueStatus.fulfilled, (state, action) => {
         state.loading = false;
-        const updatedQueue = action.payload?.data || action.payload;
-        if (updatedQueue) {
-          const index = state.queues.findIndex(q => q._id === updatedQueue._id);
+        if (action.payload) {
+          const index = state.queues.findIndex(q => q._id === action.payload._id);
           if (index !== -1) {
-            state.queues[index] = updatedQueue;
+            state.queues[index] = action.payload;
           }
         }
       })
@@ -244,7 +238,7 @@ const queueSlice = createSlice({
       })
       .addCase(getQueueStats.fulfilled, (state, action) => {
         state.loading = false;
-        state.stats = action.payload?.data || action.payload || null;
+        state.stats = action.payload || null;
       })
       .addCase(getQueueStats.rejected, (state, action) => {
         state.loading = false;

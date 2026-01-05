@@ -14,12 +14,12 @@ const initialState: AppointmentState = {
 };
 
 // Get all appointments (Admin/Staff)
-export const getAppointments = createAsyncThunk(
+export const getAppointments = createAsyncThunk<Appointment[], any>(
   'appointments/getAppointments',
   async (params: any = {}, { rejectWithValue }) => {
     try {
       const response = await appointmentService.getAppointments(params);
-      return response.data;
+      return response.data.data || response.data;
     } catch (error: any) {
       const message = error.response?.data?.error || 'Failed to fetch appointments';
       return rejectWithValue(message);
@@ -28,12 +28,12 @@ export const getAppointments = createAsyncThunk(
 );
 
 // Get my appointments (Customer)
-export const getMyAppointments = createAsyncThunk(
+export const getMyAppointments = createAsyncThunk<Appointment[]>(
   'appointments/getMyAppointments',
   async (_, { rejectWithValue }) => {
     try {
       const response = await appointmentService.getMyAppointments();
-      return response.data;
+      return response.data.data || response.data;
     } catch (error: any) {
       const message = error.response?.data?.error || 'Failed to fetch appointments';
       return rejectWithValue(message);
@@ -42,12 +42,12 @@ export const getMyAppointments = createAsyncThunk(
 );
 
 // Get single appointment
-export const getAppointment = createAsyncThunk(
+export const getAppointment = createAsyncThunk<Appointment, string>(
   'appointments/getAppointment',
   async (id: string, { rejectWithValue }) => {
     try {
       const response = await appointmentService.getAppointment(id);
-      return response.data;
+      return response.data.data || response.data;
     } catch (error: any) {
       const message = error.response?.data?.error || 'Failed to fetch appointment';
       return rejectWithValue(message);
@@ -70,7 +70,7 @@ export const createAppointment = createAsyncThunk(
     try {
       const response = await appointmentService.createAppointment(data);
       toast.success('Appointment created successfully!');
-      return response.data;
+      return response.data.data || response.data;
     } catch (error: any) {
       const message = error.response?.data?.error || 'Failed to create appointment';
       toast.error(message);
@@ -86,7 +86,7 @@ export const updateAppointment = createAsyncThunk(
     try {
       const response = await appointmentService.updateAppointment(id, data);
       toast.success('Appointment updated successfully!');
-      return response.data;
+      return response.data.data || response.data;
     } catch (error: any) {
       const message = error.response?.data?.error || 'Failed to update appointment';
       toast.error(message);
@@ -102,7 +102,7 @@ export const updateAppointmentStatus = createAsyncThunk(
     try {
       const response = await appointmentService.updateAppointmentStatus(id, status);
       toast.success('Appointment status updated!');
-      return response.data;
+      return response.data.data || response.data;
     } catch (error: any) {
       const message = error.response?.data?.error || 'Failed to update appointment';
       toast.error(message);
@@ -133,7 +133,7 @@ export const getAppointmentStats = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await appointmentService.getAppointmentStats();
-      return response.data;
+      return response.data.data || response.data;
     } catch (error: any) {
       const message = error.response?.data?.error || 'Failed to fetch statistics';
       return rejectWithValue(message);
@@ -181,11 +181,7 @@ const appointmentSlice = createSlice({
       })
       .addCase(getMyAppointments.fulfilled, (state, action) => {
         state.loading = false;
-        if (action.payload?.data) {
-          state.myAppointments = Array.isArray(action.payload.data) ? action.payload.data : [];
-        } else if (Array.isArray(action.payload)) {
-          state.myAppointments = action.payload;
-        }
+        state.myAppointments = Array.isArray(action.payload) ? action.payload : [];
       })
       .addCase(getMyAppointments.rejected, (state, action) => {
         state.loading = false;
@@ -215,9 +211,8 @@ const appointmentSlice = createSlice({
       })
       .addCase(createAppointment.fulfilled, (state, action) => {
         state.loading = false;
-        const appointment = action.payload?.data || action.payload;
-        if (appointment) {
-          state.myAppointments.unshift(appointment);
+        if (action.payload) {
+          state.myAppointments.unshift(action.payload);
         }
       })
       .addCase(createAppointment.rejected, (state, action) => {
@@ -232,11 +227,10 @@ const appointmentSlice = createSlice({
       })
       .addCase(updateAppointment.fulfilled, (state, action) => {
         state.loading = false;
-        const updatedAppointment = action.payload?.data || action.payload;
-        if (updatedAppointment) {
-          const index = state.appointments.findIndex(a => a._id === updatedAppointment._id);
+        if (action.payload) {
+          const index = state.appointments.findIndex(a => a._id === action.payload._id);
           if (index !== -1) {
-            state.appointments[index] = updatedAppointment;
+            state.appointments[index] = action.payload;
           }
         }
       })
@@ -252,11 +246,10 @@ const appointmentSlice = createSlice({
       })
       .addCase(updateAppointmentStatus.fulfilled, (state, action) => {
         state.loading = false;
-        const updatedAppointment = action.payload?.data || action.payload;
-        if (updatedAppointment) {
-          const index = state.appointments.findIndex(a => a._id === updatedAppointment._id);
+        if (action.payload) {
+          const index = state.appointments.findIndex(a => a._id === action.payload._id);
           if (index !== -1) {
-            state.appointments[index] = updatedAppointment;
+            state.appointments[index] = action.payload;
           }
         }
       })
@@ -288,7 +281,7 @@ const appointmentSlice = createSlice({
       })
       .addCase(getAppointmentStats.fulfilled, (state, action) => {
         state.loading = false;
-        state.stats = action.payload?.data || action.payload || null;
+        state.stats = action.payload || null;
       })
       .addCase(getAppointmentStats.rejected, (state, action) => {
         state.loading = false;
