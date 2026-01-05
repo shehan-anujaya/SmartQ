@@ -104,7 +104,9 @@ const Appointments: React.FC = () => {
                 <div className="space-y-3">
                   <div className="flex justify-between items-start">
                     <h3 className="font-semibold text-lg text-gray-900">
-                      {appointment.service.name}
+                      {typeof appointment.service === 'object' && appointment.service?.name 
+                        ? appointment.service.name 
+                        : 'Service'}
                     </h3>
                     <Badge variant={getStatusBadge(appointment.status)}>
                       {appointment.status.replace('_', ' ')}
@@ -119,12 +121,16 @@ const Appointments: React.FC = () => {
                     <p>
                       <span className="font-medium">Time:</span> {appointment.appointmentTime}
                     </p>
-                    <p>
-                      <span className="font-medium">Duration:</span> {appointment.service.duration} mins
-                    </p>
-                    <p>
-                      <span className="font-medium">Price:</span> ${appointment.service.price}
-                    </p>
+                    {typeof appointment.service === 'object' && appointment.service && (
+                      <>
+                        <p>
+                          <span className="font-medium">Duration:</span> {appointment.service.duration} mins
+                        </p>
+                        <p>
+                          <span className="font-medium">Price:</span> ${appointment.service.price}
+                        </p>
+                      </>
+                    )}
                     {appointment.notes && (
                       <p>
                         <span className="font-medium">Notes:</span> {appointment.notes}

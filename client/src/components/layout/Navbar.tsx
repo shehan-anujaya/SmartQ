@@ -22,45 +22,48 @@ const Navbar: React.FC = () => {
   ];
 
   return (
-    <nav className="bg-white shadow-md sticky top-0 z-40">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
+    <nav className="fixed top-0 w-full z-50 transition-all duration-300">
+      <div className="absolute inset-0 bg-white/80 backdrop-blur-xl border-b border-white/20 shadow-sm"></div>
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between h-20">
           {/* Logo */}
           <div className="flex items-center">
-            <Link to="/" className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center">
+            <Link to="/" className="flex items-center space-x-3 group">
+              <div className="w-10 h-10 bg-gradient-to-br from-primary-600 to-primary-400 rounded-xl flex items-center justify-center shadow-lg shadow-primary-500/30 group-hover:scale-105 transition-transform duration-300">
                 <span className="text-white font-bold text-xl">Q</span>
               </div>
-              <span className="text-xl font-bold text-gray-900">SmartQ</span>
+              <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-neutral-900 to-neutral-600">SmartQ</span>
             </Link>
           </div>
 
           {/* Desktop Navigation */}
           {isAuthenticated && (
-            <div className="hidden md:flex items-center space-x-4">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.to}
-                  to={link.to}
-                  className="flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-50 transition-colors"
-                >
-                  <link.icon className="h-5 w-5" />
-                  <span>{link.label}</span>
-                </Link>
-              ))}
+            <div className="hidden md:flex items-center space-x-2">
+              <div className="flex items-center bg-neutral-100/50 p-1.5 rounded-full border border-neutral-200/50 backdrop-blur-sm">
+                {navLinks.map((link) => (
+                  <Link
+                    key={link.to}
+                    to={link.to}
+                    className="flex items-center space-x-2 px-4 py-2 rounded-full text-sm font-medium text-neutral-600 hover:text-primary-600 hover:bg-white hover:shadow-sm transition-all duration-200"
+                  >
+                    <link.icon className="h-4 w-4" />
+                    <span>{link.label}</span>
+                  </Link>
+                ))}
+              </div>
 
               {/* User Menu */}
-              <div className="flex items-center space-x-4 ml-4 pl-4 border-l">
-                <div className="text-sm">
-                  <p className="font-medium text-gray-900">{user?.name}</p>
-                  <p className="text-xs text-gray-500 capitalize">{user?.role}</p>
+              <div className="flex items-center space-x-4 ml-6 pl-6 border-l border-neutral-200">
+                <div className="text-right hidden lg:block">
+                  <p className="text-sm font-semibold text-neutral-900">{user?.name}</p>
+                  <p className="text-xs text-neutral-500 capitalize">{user?.role}</p>
                 </div>
                 <button
                   onClick={handleLogout}
-                  className="flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium text-red-600 hover:bg-red-50 transition-colors"
+                  className="p-2.5 rounded-full text-neutral-500 hover:bg-red-50 hover:text-red-600 transition-colors border border-transparent hover:border-red-100"
+                  title="Logout"
                 >
                   <FiLogOut className="h-5 w-5" />
-                  <span>Logout</span>
                 </button>
               </div>
             </div>
@@ -71,7 +74,7 @@ const Navbar: React.FC = () => {
             <div className="md:hidden flex items-center">
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="p-2 rounded-md text-gray-700 hover:text-primary-600 hover:bg-gray-50"
+                className="p-2 rounded-xl text-neutral-600 hover:text-primary-600 hover:bg-primary-50 transition-colors"
               >
                 {mobileMenuOpen ? (
                   <FiX className="h-6 w-6" />
@@ -86,27 +89,32 @@ const Navbar: React.FC = () => {
 
       {/* Mobile menu */}
       {isAuthenticated && mobileMenuOpen && (
-        <div className="md:hidden border-t">
-          <div className="px-2 pt-2 pb-3 space-y-1">
+        <div className="relative md:hidden bg-white/90 backdrop-blur-xl border-b border-neutral-200/50 shadow-xl">
+          <div className="px-4 pt-2 pb-4 space-y-2">
             {navLinks.map((link) => (
               <Link
                 key={link.to}
                 to={link.to}
                 onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center space-x-2 px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-50"
+                className="flex items-center space-x-3 px-4 py-3 rounded-xl text-base font-medium text-neutral-700 hover:text-primary-600 hover:bg-primary-50/50 transition-colors"
               >
                 <link.icon className="h-5 w-5" />
                 <span>{link.label}</span>
               </Link>
             ))}
-            <div className="pt-4 pb-3 border-t">
-              <div className="px-3 mb-3">
-                <p className="text-base font-medium text-gray-900">{user?.name}</p>
-                <p className="text-sm text-gray-500 capitalize">{user?.role}</p>
+            <div className="pt-4 pb-2 border-t border-neutral-100 mt-2">
+              <div className="px-4 mb-4 flex items-center space-x-3">
+                <div className="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center text-primary-700 font-bold">
+                  {user?.name?.[0]}
+                </div>
+                <div>
+                  <p className="text-base font-semibold text-neutral-900">{user?.name}</p>
+                  <p className="text-xs text-neutral-500 capitalize">{user?.role}</p>
+                </div>
               </div>
               <button
                 onClick={handleLogout}
-                className="flex items-center space-x-2 w-full px-3 py-2 rounded-md text-base font-medium text-red-600 hover:bg-red-50"
+                className="flex items-center space-x-3 w-full px-4 py-3 rounded-xl text-base font-medium text-red-600 hover:bg-red-50 transition-colors"
               >
                 <FiLogOut className="h-5 w-5" />
                 <span>Logout</span>

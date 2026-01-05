@@ -24,16 +24,16 @@ import AppointmentManagement from './pages/AppointmentManagement';
 
 function AppContent() {
   const dispatch = useAppDispatch();
-  const { token, isAuthenticated } = useAppSelector((state) => state.auth);
+  const { token, isAuthenticated, user } = useAppSelector((state) => state.auth);
 
-  // Verify token on app mount
+  // Verify token on app mount - only if we have token but no user
   useEffect(() => {
-    if (token && isAuthenticated) {
+    if (token && isAuthenticated && !user) {
       dispatch(getMe()).catch(() => {
         // Token is invalid, user will be redirected by API interceptor
       });
     }
-  }, [dispatch, token, isAuthenticated]);
+  }, [dispatch, token, isAuthenticated, user]);
 
   return (
     <>

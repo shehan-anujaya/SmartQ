@@ -12,24 +12,37 @@ import { FiCalendar, FiClock, FiCheckCircle, FiUsers } from 'react-icons/fi';
 
 const Dashboard: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { user } = useAppSelector((state: RootState) => state.auth);
+  const { user, loading: authLoading } = useAppSelector((state: RootState) => state.auth);
   const { myQueues, stats: queueStats, loading: queueLoading } = useAppSelector((state: RootState) => state.queues);
   const { myAppointments, stats: appointmentStats, loading: appointmentLoading } = useAppSelector(
     (state: RootState) => state.appointments
   );
 
   useEffect(() => {
-    if (user?.role === 'customer') {
-      dispatch(getMyQueues());
-      dispatch(getMyAppointments());
-    } else {
-      dispatch(getQueueStats());
-      dispatch(getAppointmentStats());
+    if (user) {
+      if (user.role === 'customer') {
+        dispatch(getMyQueues());
+        dispatch(getMyAppointments());
+      } else {
+        dispatch(getQueueStats());
+        dispatch(getAppointmentStats());
+      }
+      dispatch(getServices({ status: 'active', limit: 5 }));
     }
-    dispatch(getServices({ status: 'active', limit: 5 }));
   }, [dispatch, user?.role]);
 
-  const isLoading = queueLoading || appointmentLoading;
+  const isLoading = authLoading || queueLoading || appointmentLoading;
+
+  // Show loading while user is being fetched
+  if (authLoading || !user) {
+    return (
+      <Layout>
+        <div className="flex items-center justify-center min-h-[400px]">
+          <Loading />
+        </div>
+      </Layout>
+    );
+  }
 
   const stats = user?.role === 'customer'
     ? [
@@ -164,7 +177,11 @@ const Dashboard: React.FC = () => {
                       key={appointment._id}
                       className="p-3 border border-gray-200 rounded-lg"
                     >
-                      <p className="font-medium text-gray-900">{appointment.service.name}</p>
+                      <p className="font-medium text-gray-900">
+                        {typeof appointment.service === 'object' && appointment.service?.name 
+                          ? appointment.service.name 
+                          : 'Service'}
+                      </p>
                       <p className="text-sm text-gray-600">
                         {new Date(appointment.appointmentDate).toLocaleDateString()} at{' '}
                         {appointment.appointmentTime}
