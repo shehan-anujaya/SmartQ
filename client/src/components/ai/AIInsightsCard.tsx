@@ -3,6 +3,7 @@ import { aiService, AIInsights } from '../../services/aiService';
 import Card from '../common/Card';
 import Loading from '../common/Loading';
 import { FiZap, FiRefreshCw } from 'react-icons/fi';
+import { getErrorMessage } from '../../utils/errorUtils';
 
 interface AIInsightsCardProps {
   days?: number;
@@ -24,7 +25,7 @@ const AIInsightsCard: React.FC<AIInsightsCardProps> = ({ days = 30 }) => {
         setError('Failed to load AI insights');
       }
     } catch (err: any) {
-      setError(err.response?.data?.error || 'Failed to fetch AI insights');
+      setError(getErrorMessage(err));
     } finally {
       setLoading(false);
     }
