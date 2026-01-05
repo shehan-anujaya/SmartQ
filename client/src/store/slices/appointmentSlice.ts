@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { AppointmentState, Appointment } from '../../types';
 import { appointmentService } from '../../services/appointmentService';
 import toast from 'react-hot-toast';
+import { getErrorMessage } from '../../utils/errorUtils';
 
 const initialState: AppointmentState = {
   appointments: [],
@@ -21,7 +22,7 @@ export const getAppointments = createAsyncThunk(
       const response = await appointmentService.getAppointments(params);
       return response as any;
     } catch (error: any) {
-      const message = error.response?.data?.error || 'Failed to fetch appointments';
+      const message = getErrorMessage(error);
       return rejectWithValue(message);
     }
   }
@@ -35,7 +36,7 @@ export const getMyAppointments = createAsyncThunk(
       const response = await appointmentService.getMyAppointments();
       return response as any;
     } catch (error: any) {
-      const message = error.response?.data?.error || 'Failed to fetch appointments';
+      const message = getErrorMessage(error);
       return rejectWithValue(message);
     }
   }
@@ -49,7 +50,7 @@ export const getAppointment = createAsyncThunk(
       const response = await appointmentService.getAppointment(id);
       return response as any;
     } catch (error: any) {
-      const message = error.response?.data?.error || 'Failed to fetch appointment';
+      const message = getErrorMessage(error);
       return rejectWithValue(message);
     }
   }
@@ -72,7 +73,7 @@ export const createAppointment = createAsyncThunk(
       toast.success('Appointment created successfully!');
       return response as any;
     } catch (error: any) {
-      const message = error.response?.data?.error || 'Failed to create appointment';
+      const message = getErrorMessage(error);
       toast.error(message);
       return rejectWithValue(message);
     }
@@ -88,7 +89,7 @@ export const updateAppointment = createAsyncThunk(
       toast.success('Appointment updated successfully!');
       return response as any;
     } catch (error: any) {
-      const message = error.response?.data?.error || 'Failed to update appointment';
+      const message = getErrorMessage(error);
       toast.error(message);
       return rejectWithValue(message);
     }
@@ -104,7 +105,7 @@ export const updateAppointmentStatus = createAsyncThunk(
       toast.success('Appointment status updated!');
       return response as any;
     } catch (error: any) {
-      const message = error.response?.data?.error || 'Failed to update appointment';
+      const message = getErrorMessage(error);
       toast.error(message);
       return rejectWithValue(message);
     }
@@ -120,7 +121,7 @@ export const cancelAppointment = createAsyncThunk(
       toast.success('Appointment cancelled successfully!');
       return id;
     } catch (error: any) {
-      const message = error.response?.data?.error || 'Failed to cancel appointment';
+      const message = getErrorMessage(error);
       toast.error(message);
       return rejectWithValue(message);
     }
@@ -135,7 +136,7 @@ export const getAppointmentStats = createAsyncThunk(
       const response = await appointmentService.getAppointmentStats();
       return response as any;
     } catch (error: any) {
-      const message = error.response?.data?.error || 'Failed to fetch statistics';
+      const message = getErrorMessage(error);
       return rejectWithValue(message);
     }
   }

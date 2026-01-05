@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { ServiceState, Service } from '../../types';
 import { serviceService } from '../../services/serviceService';
 import toast from 'react-hot-toast';
+import { getErrorMessage } from '../../utils/errorUtils';
 
 const initialState: ServiceState = {
   services: [],
@@ -19,7 +20,7 @@ export const getServices = createAsyncThunk(
       const response = await serviceService.getServices(params);
       return response.data;
     } catch (error: any) {
-      const message = error.response?.data?.error || 'Failed to fetch services';
+      const message = getErrorMessage(error);
       return rejectWithValue(message);
     }
   }
@@ -33,7 +34,7 @@ export const getService = createAsyncThunk(
       const response = await serviceService.getService(id);
       return response.data;
     } catch (error: any) {
-      const message = error.response?.data?.error || 'Failed to fetch service';
+      const message = getErrorMessage(error);
       return rejectWithValue(message);
     }
   }
@@ -48,7 +49,7 @@ export const createService = createAsyncThunk(
       toast.success('Service created successfully!');
       return response.data;
     } catch (error: any) {
-      const message = error.response?.data?.error || 'Failed to create service';
+      const message = getErrorMessage(error);
       toast.error(message);
       return rejectWithValue(message);
     }
@@ -64,7 +65,7 @@ export const updateService = createAsyncThunk(
       toast.success('Service updated successfully!');
       return response.data;
     } catch (error: any) {
-      const message = error.response?.data?.error || 'Failed to update service';
+      const message = getErrorMessage(error);
       toast.error(message);
       return rejectWithValue(message);
     }
@@ -80,7 +81,7 @@ export const deleteService = createAsyncThunk(
       toast.success('Service deleted successfully!');
       return id;
     } catch (error: any) {
-      const message = error.response?.data?.error || 'Failed to delete service';
+      const message = getErrorMessage(error);
       toast.error(message);
       return rejectWithValue(message);
     }

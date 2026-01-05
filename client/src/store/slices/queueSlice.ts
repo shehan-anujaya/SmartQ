@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { QueueState } from '../../types';
 import { queueService } from '../../services/queueService';
 import toast from 'react-hot-toast';
+import { getErrorMessage } from '../../utils/errorUtils';
 
 const initialState: QueueState = {
   queues: [],
@@ -21,7 +22,7 @@ export const getQueues = createAsyncThunk(
       const response = await queueService.getQueues(params);
       return response as any;
     } catch (error: any) {
-      const message = error.response?.data?.error || 'Failed to fetch queues';
+      const message = getErrorMessage(error);
       return rejectWithValue(message);
     }
   }
@@ -35,7 +36,7 @@ export const getMyQueues = createAsyncThunk(
       const response = await queueService.getMyQueues();
       return response as any;
     } catch (error: any) {
-      const message = error.response?.data?.error || 'Failed to fetch queues';
+      const message = getErrorMessage(error);
       return rejectWithValue(message);
     }
   }
@@ -49,7 +50,7 @@ export const getQueue = createAsyncThunk(
       const response = await queueService.getQueue(id);
       return response as any;
     } catch (error: any) {
-      const message = error.response?.data?.error || 'Failed to fetch queue';
+      const message = getErrorMessage(error);
       return rejectWithValue(message);
     }
   }
@@ -64,7 +65,7 @@ export const joinQueue = createAsyncThunk(
       toast.success('Successfully joined queue!');
       return response as any;
     } catch (error: any) {
-      const message = error.response?.data?.error || 'Failed to join queue';
+      const message = getErrorMessage(error);
       toast.error(message);
       return rejectWithValue(message);
     }
@@ -80,7 +81,7 @@ export const updateQueueStatus = createAsyncThunk(
       toast.success('Queue status updated!');
       return response as any;
     } catch (error: any) {
-      const message = error.response?.data?.error || 'Failed to update queue';
+      const message = getErrorMessage(error);
       toast.error(message);
       return rejectWithValue(message);
     }
@@ -96,7 +97,7 @@ export const cancelQueue = createAsyncThunk(
       toast.success('Queue cancelled successfully!');
       return id;
     } catch (error: any) {
-      const message = error.response?.data?.error || 'Failed to cancel queue';
+      const message = getErrorMessage(error);
       toast.error(message);
       return rejectWithValue(message);
     }
@@ -111,7 +112,7 @@ export const getQueueStats = createAsyncThunk(
       const response = await queueService.getQueueStats();
       return response as any;
     } catch (error: any) {
-      const message = error.response?.data?.error || 'Failed to fetch statistics';
+      const message = getErrorMessage(error);
       return rejectWithValue(message);
     }
   }

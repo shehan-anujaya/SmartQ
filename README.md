@@ -285,9 +285,9 @@ After seeding, you can login with these credentials:
 
 | Role | Email | Password |
 |------|-------|----------|
-| Admin | admin@smartq.com | admin123 |
-| Staff | staff@smartq.com | staff123 |
-| Customer | customer@smartq.com | customer123 |
+| Admin | admin@smartq.com | Admin@123 |
+| Staff | staff@smartq.com | Staff@123 |
+| Customer | john@example.com | Customer@123 |
 
 ---
 

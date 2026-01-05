@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { AuthState, LoginCredentials, RegisterData } from '../../types';
 import { authService } from '../../services/authService';
 import toast from 'react-hot-toast';
+import { getErrorMessage } from '../../utils/errorUtils';
 
 const initialState: AuthState = {
   user: JSON.parse(localStorage.getItem('user') || 'null'),
@@ -22,7 +23,7 @@ export const register = createAsyncThunk(
       toast.success('Registration successful!');
       return response.data;
     } catch (error: any) {
-      const message = error.response?.data?.error || 'Registration failed';
+      const message = getErrorMessage(error);
       toast.error(message);
       return rejectWithValue(message);
     }
@@ -40,7 +41,7 @@ export const login = createAsyncThunk(
       toast.success('Login successful!');
       return response.data;
     } catch (error: any) {
-      const message = error.response?.data?.error || 'Login failed';
+      const message = getErrorMessage(error);
       toast.error(message);
       return rejectWithValue(message);
     }
@@ -55,7 +56,7 @@ export const getMe = createAsyncThunk(
       const response = await authService.getMe();
       return response.data;
     } catch (error: any) {
-      const message = error.response?.data?.error || 'Failed to fetch user';
+      const message = getErrorMessage(error);
       return rejectWithValue(message);
     }
   }
@@ -71,7 +72,7 @@ export const updateProfile = createAsyncThunk(
       toast.success('Profile updated successfully!');
       return response.data;
     } catch (error: any) {
-      const message = error.response?.data?.error || 'Update failed';
+      const message = getErrorMessage(error);
       toast.error(message);
       return rejectWithValue(message);
     }
