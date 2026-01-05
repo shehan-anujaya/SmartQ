@@ -25,11 +25,11 @@ export const AIAnalytics = () => {
       aiService.analyzeQueueEfficiency(timeRange)
     ]);
 
-    setAppointmentPatterns(patternsResponse.data);
-    setQueueEfficiency(efficiencyResponse.data);
+    setAppointmentPatterns(patternsResponse.data || null);
+    setQueueEfficiency(efficiencyResponse.data || null);
     
     // Check if we have real data or fallback data
-    if (patternsResponse.data.totalAppointments > 0 || efficiencyResponse.data.totalCompleted > 0) {
+    if ((patternsResponse.data?.totalAppointments || 0) > 0 || (efficiencyResponse.data?.totalCompleted || 0) > 0) {
       setAIStatus('available');
     } else {
       setAIStatus('available'); // Still show as available with empty data
@@ -65,20 +65,20 @@ export const AIAnalytics = () => {
   };
 
   const getPeakHoursData = () => {
-    if (!queueEfficiency) return [];
-    return queueEfficiency.peakHours.map(ph => ({
+    if (!queueEfficiency || !queueEfficiency.peakHours) return [];
+    return queueEfficiency.peakHours.map((ph: any) => ({
       hour: `${ph.hour}:00`,
       count: ph.count
     }));
   };
 
   const getServiceEfficiencyData = () => {
-    if (!queueEfficiency) return [];
-    return Object.entries(queueEfficiency.byService).map(([service, data]) => ({
+    if (!queueEfficiency || !queueEfficiency.byService) return [];
+    return Object.entries(queueEfficiency.byService).map(([service, data]: [string, any]) => ({
       service,
-      avgWait: Math.round(data.avgWait),
-      avgService: Math.round(data.avgService),
-      count: data.count
+      avgWait: Math.round((data as any).avgWait),
+      avgService: Math.round((data as any).avgService),
+      count: (data as any).count
     }));
   };
 
@@ -217,7 +217,7 @@ export const AIAnalytics = () => {
                 cx="50%"
                 cy="50%"
                 labelLine={false}
-                label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                label={({ name, percent }: any) => `${name}: ${((percent || 0) * 100).toFixed(0)}%`}
                 outerRadius={80}
                 fill="#8884d8"
                 dataKey="value"
@@ -249,14 +249,14 @@ export const AIAnalytics = () => {
       </div>
 
       {/* AI Recommendations */}
-      {queueEfficiency && queueEfficiency.recommendations.length > 0 && (
+      {queueEfficiency && queueEfficiency.recommendations && queueEfficiency.recommendations.length > 0 && (
         <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-6 rounded-lg border border-blue-200">
           <div className="flex items-center gap-2 mb-4">
             <Brain className="h-5 w-5 text-blue-600" />
             <h3 className="text-lg font-semibold text-gray-900">AI Recommendations</h3>
           </div>
           <ul className="space-y-2">
-            {queueEfficiency.recommendations.map((rec, index) => (
+            {queueEfficiency.recommendations.map((rec: string, index: number) => (
               <li key={index} className="flex items-start gap-2">
                 <span className="text-blue-600 mt-1">•</span>
                 <span className="text-gray-700">{rec}</span>
@@ -267,7 +267,7 @@ export const AIAnalytics = () => {
       )}
 
       {/* Peak Hours Queue Activity */}
-      {queueEfficiency && queueEfficiency.peakHours.length > 0 && (
+      {queueEfficiency && queueEfficiency.peakHours && queueEfficiency.peakHours.length > 0 && (
         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Peak Queue Hours</h3>
           <ResponsiveContainer width="100%" height={200}>

@@ -48,6 +48,9 @@ export interface QueueEfficiency {
   totalCompleted: number;
   averageWaitTime: number;
   averageServiceTime: number;
+  byService?: Record<string, { count: number; avgWait: number; avgService: number }>;
+  peakHours?: { hour: number; count: number }[];
+  recommendations?: string[];
 }
 
 export interface AIInsights {
@@ -132,10 +135,7 @@ export const aiService = {
         data: {
           totalCompleted: 0,
           averageWaitTime: 0,
-          averageServiceTime: 0,
-          byService: {},
-          peakHours: [],
-          recommendations: []
+          averageServiceTime: 0
         }
       };
     }

@@ -10,7 +10,7 @@ import Textarea from '../components/common/Textarea';
 import Modal from '../components/common/Modal';
 import Badge from '../components/common/Badge';
 import Loading from '../components/common/Loading';
-import { FiPlus, FiEdit2, FiTrash2, FiDollarSign, FiClock } from 'react-icons/fi';
+import { FiPlus, FiEdit2, FiTrash2, FiClock } from 'react-icons/fi';
 import { Service, ServiceStatus } from '../types';
 import { displayPrice } from '../utils/currency';
 

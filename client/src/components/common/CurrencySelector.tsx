@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { FiDollarSign } from 'react-icons/fi';
 import { CURRENCY_NAMES, CURRENCY_SYMBOLS, getSelectedCurrency, setSelectedCurrency } from '../../utils/currency';
 
