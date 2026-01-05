@@ -2,11 +2,13 @@ import React, { useEffect, useState } from 'react';
 import Layout from '../components/layout/Layout';
 import Card from '../components/common/Card';
 import Loading from '../components/common/Loading';
+import Button from '../components/common/Button';
 import { useAppSelector } from '../store/hooks';
 import { aiService, PeakHourData } from '../services/aiService';
 import { AIAnalytics } from '../components/analytics/AIAnalytics';
 import AIInsightsCard from '../components/ai/AIInsightsCard';
 import api from '../services/api';
+import { generateInsightsPDF } from '../utils/pdfGenerator';
 import {
   FiUsers,
   FiCalendar,
@@ -14,7 +16,8 @@ import {
   FiTrendingUp,
   FiCheckCircle,
   FiXCircle,
-  FiActivity
+  FiActivity,
+  FiDownload
 } from 'react-icons/fi';
 
 interface AnalyticsData {
@@ -49,25 +52,30 @@ interface AnalyticsData {
 }
 
 const Analytics: React.FC = () => {
-  useAppSelector((state) => state.auth); // Auth check for route protection
+  const { user } = useAppSelector((state) => state.auth); // Auth check for route protection
   const [loading, setLoading] = useState(true);
+  const [generatingPDF, setGeneratingPDF] = useState(false);
   const [analytics, setAnalytics] = useState<AnalyticsData | null>(null);
   const [peakHours, setPeakHours] = useState<PeakHourData[]>([]);
+  const [aiInsights, setAIInsights] = useState<any>(null);
+  const [services, setServices] = useState<any[]>([]);
 
   useEffect(() => {
     const fetchAnalytics = async () => {
       try {
-        const [usersRes, queuesRes, appointmentsRes, servicesRes] = await Promise.all([
+        const [usersRes, queuesRes, appointmentsRes, servicesRes, insightsRes] = await Promise.all([
           api.get('/users/stats/overview'),
           api.get('/queues/stats/overview'),
           api.get('/appointments/stats/overview'),
-          api.get('/services?limit=100')
+          api.get('/services?limit=100'),
+          aiService.getAIInsights(30)
         ]);
 
         const peakHoursRes = await aiService.getPeakHours();
 
         // Extract services array from nested response structure
         const servicesArray = servicesRes.data?.data?.services || servicesRes.data?.data || [];
+        setServices(servicesArray.filter((s: any) => s.status === 'active'));
 
         setAnalytics({
           users: usersRes.data.data || {
@@ -103,6 +111,10 @@ const Analytics: React.FC = () => {
         if (peakHoursRes.success && peakHoursRes.data) {
           setPeakHours(peakHoursRes.data);
         }
+
+        if (insightsRes.success && insightsRes.data) {
+          setAIInsights(insightsRes.data);
+        }
       } catch (error) {
         console.error('Failed to fetch analytics:', error);
       } finally {
@@ -120,6 +132,57 @@ const Analytics: React.FC = () => {
       </Layout>
     );
   }
+
+  const handleDownloadPDF = async () => {
+    if (!analytics || generatingPDF) return;
+
+    setGeneratingPDF(true);
+    try {
+      const dashboardStats = {
+        appointments: {
+          total: analytics.appointments.total,
+          today: analytics.appointments.todayCount,
+          pending: analytics.appointments.scheduled,
+          completed: analytics.appointments.completed,
+        },
+        queue: {
+          total: analytics.queues.total,
+          waiting: analytics.queues.waiting,
+          serving: analytics.queues.inProgress,
+          avgWaitTime: analytics.queues.avgWaitTime,
+        },
+        users: {
+          total: analytics.users.total,
+          active: analytics.users.activeToday,
+          newThisMonth: analytics.users.customers,
+        },
+        services: {
+          total: analytics.services.total,
+          active: analytics.services.active,
+        },
+      };
+
+      const insights = {
+        summary: aiInsights?.summary || 'AI insights are currently being generated...',
+        recommendations: aiInsights?.recommendations || [
+          'Continue monitoring system performance',
+          'Review peak hours data for staffing optimization',
+        ],
+      };
+
+      await generateInsightsPDF(
+        dashboardStats,
+        insights,
+        services,
+        user?.name || 'Admin'
+      );
+    } catch (error) {
+      console.error('Failed to generate PDF:', error);
+      alert('Failed to generate PDF report. Please try again.');
+    } finally {
+      setGeneratingPDF(false);
+    }
+  };
 
   const statCards = [
     {
@@ -157,12 +220,22 @@ const Analytics: React.FC = () => {
   return (
     <Layout>
       <div className="space-y-6">
-        {/* Header */}
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Analytics Dashboard</h1>
-          <p className="text-gray-600 mt-1">
-            Overview of your business performance and insights
-          </p>
+        {/* Header with Download Button */}
+        <div className="flex justify-between items-start">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">Analytics Dashboard</h1>
+            <p className="text-gray-600 mt-1">
+              Overview of your business performance and insights
+            </p>
+          </div>
+          <Button
+            onClick={handleDownloadPDF}
+            disabled={generatingPDF || !analytics}
+            className="flex items-center gap-2"
+          >
+            <FiDownload />
+            {generatingPDF ? 'Generating...' : 'Download PDF Report'}
+          </Button>
         </div>
 
         {/* Stats Grid */}

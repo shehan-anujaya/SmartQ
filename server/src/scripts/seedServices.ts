@@ -13,7 +13,8 @@ const services = [
     name: 'General Consultation',
     description: 'Standard consultation with a healthcare professional for general health concerns and checkups.',
     duration: 30,
-    price: 50,
+    price: 2500,
+    currency: 'LKR',
     category: 'Medical',
     status: ServiceStatus.ACTIVE
   },
@@ -21,7 +22,8 @@ const services = [
     name: 'Specialist Consultation',
     description: 'In-depth consultation with a specialist doctor for specific medical conditions and treatments.',
     duration: 45,
-    price: 100,
+    price: 5000,
+    currency: 'LKR',
     category: 'Medical',
     status: ServiceStatus.ACTIVE
   },
@@ -29,7 +31,8 @@ const services = [
     name: 'Lab Tests',
     description: 'Comprehensive laboratory testing including blood work, urinalysis, and other diagnostic tests.',
     duration: 20,
-    price: 75,
+    price: 3500,
+    currency: 'LKR',
     category: 'Diagnostics',
     status: ServiceStatus.ACTIVE
   },
@@ -37,7 +40,8 @@ const services = [
     name: 'X-Ray Imaging',
     description: 'Digital X-ray imaging services for bones, chest, and other body parts with quick results.',
     duration: 15,
-    price: 80,
+    price: 4000,
+    currency: 'LKR',
     category: 'Diagnostics',
     status: ServiceStatus.ACTIVE
   },
@@ -45,7 +49,8 @@ const services = [
     name: 'Vaccination',
     description: 'Immunization services including flu shots, travel vaccines, and routine vaccinations.',
     duration: 15,
-    price: 35,
+    price: 1500,
+    currency: 'LKR',
     category: 'Preventive Care',
     status: ServiceStatus.ACTIVE
   },
@@ -53,7 +58,8 @@ const services = [
     name: 'Physical Therapy',
     description: 'Rehabilitation and physical therapy sessions for injury recovery and mobility improvement.',
     duration: 60,
-    price: 90,
+    price: 4500,
+    currency: 'LKR',
     category: 'Therapy',
     status: ServiceStatus.ACTIVE
   },
@@ -61,7 +67,8 @@ const services = [
     name: 'Dental Cleaning',
     description: 'Professional dental cleaning and oral hygiene assessment with a certified dentist.',
     duration: 45,
-    price: 120,
+    price: 6000,
+    currency: 'LKR',
     category: 'Dental',
     status: ServiceStatus.ACTIVE
   },
@@ -69,7 +76,8 @@ const services = [
     name: 'Eye Examination',
     description: 'Comprehensive eye exam including vision testing, eye health assessment, and prescription updates.',
     duration: 30,
-    price: 65,
+    price: 3000,
+    currency: 'LKR',
     category: 'Vision',
     status: ServiceStatus.ACTIVE
   },
@@ -77,7 +85,8 @@ const services = [
     name: 'Mental Health Counseling',
     description: 'Confidential counseling session with a licensed mental health professional.',
     duration: 50,
-    price: 110,
+    price: 5500,
+    currency: 'LKR',
     category: 'Mental Health',
     status: ServiceStatus.ACTIVE
   },
@@ -85,7 +94,8 @@ const services = [
     name: 'Pharmacy Consultation',
     description: 'Medication review and consultation with a pharmacist for proper drug management.',
     duration: 15,
-    price: 25,
+    price: 1200,
+    currency: 'LKR',
     category: 'Pharmacy',
     status: ServiceStatus.ACTIVE
   },
@@ -93,7 +103,8 @@ const services = [
     name: 'Emergency Care',
     description: 'Immediate medical attention for urgent health conditions requiring prompt treatment.',
     duration: 60,
-    price: 200,
+    price: 10000,
+    currency: 'LKR',
     category: 'Emergency',
     status: ServiceStatus.ACTIVE
   },
@@ -101,7 +112,8 @@ const services = [
     name: 'Health Screening Package',
     description: 'Complete health screening including blood tests, ECG, and physical examination.',
     duration: 90,
-    price: 250,
+    price: 12500,
+    currency: 'LKR',
     category: 'Preventive Care',
     status: ServiceStatus.ACTIVE
   }
@@ -123,7 +135,7 @@ const seedServices = async () => {
     console.log(`✅ Created ${createdServices.length} services:`);
     
     createdServices.forEach((service, index) => {
-      console.log(`   ${index + 1}. ${service.name} - $${service.price} (${service.duration} mins)`);
+      console.log(`   ${index + 1}. ${service.name} - ${service.currency} ${service.price} (${service.duration} mins)`);
     });
 
     console.log('\n🎉 Database seeding completed successfully!');

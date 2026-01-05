@@ -49,6 +49,7 @@ export interface Service {
   description: string;
   duration: number;
   price: number;
+  currency?: string;
   category: string;
   status: ServiceStatus;
   createdAt: string;

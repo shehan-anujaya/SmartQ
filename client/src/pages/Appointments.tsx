@@ -15,6 +15,7 @@ import AIBookingSuggestions from '../components/ai/AIBookingSuggestions';
 import { format } from 'date-fns';
 import { RootState } from '../store';
 import { Appointment, Service } from '../types';
+import { displayPrice } from '../utils/currency';
 
 const Appointments: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -127,7 +128,7 @@ const Appointments: React.FC = () => {
                           <span className="font-medium">Duration:</span> {appointment.service.duration} mins
                         </p>
                         <p>
-                          <span className="font-medium">Price:</span> ${appointment.service.price}
+                          <span className="font-medium">Price:</span> {displayPrice(appointment.service.price)}
                         </p>
                       </>
                     )}

@@ -12,6 +12,7 @@ import Badge from '../components/common/Badge';
 import Loading from '../components/common/Loading';
 import { FiPlus, FiEdit2, FiTrash2, FiDollarSign, FiClock } from 'react-icons/fi';
 import { Service, ServiceStatus } from '../types';
+import { displayPrice } from '../utils/currency';
 
 const Services: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -147,8 +148,7 @@ const Services: React.FC = () => {
                       {service.duration} mins
                     </div>
                     <div className="flex items-center text-green-600 font-semibold">
-                      <FiDollarSign className="mr-1" />
-                      {service.price}
+                      {displayPrice(service.price)}
                     </div>
                   </div>
 

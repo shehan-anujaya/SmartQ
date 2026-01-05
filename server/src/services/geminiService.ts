@@ -94,7 +94,7 @@ Provide:
 
 Keep the response concise and actionable (max 400 words).`;
 
-    const model = genAI!.getGenerativeModel({ model: 'gemini-pro' });
+    const model = genAI!.getGenerativeModel({ model: 'gemini-1.5-flash' });
     const result = await model.generateContent(prompt);
     const response = await result.response;
     const text = response.text();
@@ -175,7 +175,7 @@ Format:
 MINUTES: [number]
 REASONING: [explanation]`;
 
-    const model = genAI!.getGenerativeModel({ model: 'gemini-pro' });
+    const model = genAI!.getGenerativeModel({ model: 'gemini-1.5-flash' });
     const result = await model.generateContent(prompt);
     const response = await result.response;
     const text = response.text();
@@ -240,7 +240,7 @@ export const getSmartRecommendations = async (customerId: string): Promise<strin
 Provide actionable tips to improve their experience, save time, and get better service.
 List each recommendation on a new line starting with a dash (-).`;
 
-    const model = genAI!.getGenerativeModel({ model: 'gemini-pro' });
+    const model = genAI!.getGenerativeModel({ model: 'gemini-1.5-flash' });
     const result = await model.generateContent(prompt);
     const response = await result.response;
     const text = response.text();

@@ -29,6 +29,11 @@ const serviceSchema = new Schema<IService>(
       required: [true, 'Service price is required'],
       min: [0, 'Price cannot be negative']
     },
+    currency: {
+      type: String,
+      default: 'LKR',
+      trim: true
+    },
     category: {
       type: String,
       required: [true, 'Service category is required'],

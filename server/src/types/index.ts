@@ -32,6 +32,7 @@ export interface IService extends Document {
   description: string;
   duration: number; // in minutes
   price: number;
+  currency: string; // e.g., 'LKR', 'USD', 'EUR'
   category: string;
   status: ServiceStatus;
   createdAt: Date;

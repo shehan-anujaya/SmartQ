@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { logout } from '../../store/slices/authSlice';
 import { FiHome, FiCalendar, FiClock, FiLogOut, FiMenu, FiX } from 'react-icons/fi';
+import CurrencySelector from '../common/CurrencySelector';
 
 const Navbar: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
@@ -54,6 +55,7 @@ const Navbar: React.FC = () => {
 
               {/* User Menu */}
               <div className="flex items-center space-x-4 ml-6 pl-6 border-l border-neutral-200">
+                <CurrencySelector />
                 <div className="text-right hidden lg:block">
                   <p className="text-sm font-semibold text-neutral-900">{user?.name}</p>
                   <p className="text-xs text-neutral-500 capitalize">{user?.role}</p>
