@@ -1,7 +1,10 @@
 import axios, { AxiosInstance, AxiosError, InternalAxiosRequestConfig } from 'axios';
 
+// Use environment variable for production, fallback to relative path for dev proxy
+const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
+
 const api: AxiosInstance = axios.create({
-  baseURL: '/api', // Use relative path for Vite proxy
+  baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json'
   }

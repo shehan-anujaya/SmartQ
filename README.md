@@ -335,7 +335,7 @@ VITE_API_URL=http://localhost:5000/api
 | Component | URL |
 |-----------|-----|
 | **Frontend** | [https://smartq-nrs8kzxtf-shehans-projects-a755a7eb.vercel.app](https://smartq-nrs8kzxtf-shehans-projects-a755a7eb.vercel.app) |
-| **Backend API** | `` |
+| **Backend API** | [https://smartq-production.up.railway.app](https://smartq-production.up.railway.app) |
 
 ### Deploy Frontend to Vercel
 
