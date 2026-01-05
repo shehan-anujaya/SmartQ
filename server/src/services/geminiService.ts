@@ -228,8 +228,8 @@ export const getSmartRecommendations = async (customerId: string): Promise<strin
     ]);
 
     const serviceCategories = [...new Set([
-      ...appointments.map(a => a.service?.category).filter(Boolean),
-      ...queues.map(q => q.service?.category).filter(Boolean)
+      ...appointments.map(a => (a.service as any)?.category).filter(Boolean),
+      ...queues.map(q => (q.service as any)?.category).filter(Boolean)
     ])];
 
     const prompt = `Generate 3-5 personalized recommendations for a customer with:

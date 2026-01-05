@@ -7,6 +7,7 @@ import { getMyAppointments, getAppointmentStats } from '../store/slices/appointm
 import Layout from '../components/layout/Layout';
 import Card from '../components/common/Card';
 import Loading from '../components/common/Loading';
+import SmartRecommendationsCard from '../components/ai/SmartRecommendationsCard';
 import { RootState } from '../store';
 import { Appointment, Queue } from '../types';
 import { FiCalendar, FiClock, FiCheckCircle, FiUsers } from 'react-icons/fi';
@@ -125,6 +126,11 @@ const Dashboard: React.FC = () => {
               </Card>
             ))}
           </div>
+        )}
+
+        {/* AI Smart Recommendations for Customers */}
+        {user?.role === 'customer' && (
+          <SmartRecommendationsCard />
         )}
 
         {/* Quick Actions */}

@@ -48,9 +48,27 @@ export interface QueueEfficiency {
   totalCompleted: number;
   averageWaitTime: number;
   averageServiceTime: number;
-  byService: Record<string, { count: number; avgWait: number; avgService: number }>;
-  peakHours: { hour: number; count: number }[];
+}
+
+export interface AIInsights {
+  insights: string;
+  generatedAt: string;
+  analyzedDays: number;
+  poweredBy: string;
+}
+
+export interface SmartWaitTime {
+  estimatedWaitMinutes: number;
+  reasoning: string;
+  queueSize: number;
+  generatedAt: string;
+  poweredBy: string;
+}
+
+export interface SmartRecommendations {
   recommendations: string[];
+  generatedAt: string;
+  poweredBy: string;
 }
 
 export const aiService = {
@@ -121,5 +139,23 @@ export const aiService = {
         }
       };
     }
+  },
+
+  // Get AI-powered insights (Real AI with Gemini)
+  getAIInsights: async (days: number = 30): Promise<ApiResponse<AIInsights>> => {
+    const response = await api.get(`/ai/insights?days=${days}`);
+    return response.data;
+  },
+
+  // Get smart wait time with AI reasoning
+  getSmartWaitTime: async (serviceId: string, queueSize: number = 0): Promise<ApiResponse<SmartWaitTime>> => {
+    const response = await api.get(`/ai/smart-wait-time/${serviceId}?queueSize=${queueSize}`);
+    return response.data;
+  },
+
+  // Get personalized recommendations
+  getPersonalizedRecommendations: async (): Promise<ApiResponse<SmartRecommendations>> => {
+    const response = await api.get('/ai/recommendations');
+    return response.data;
   }
 };

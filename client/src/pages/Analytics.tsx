@@ -5,6 +5,7 @@ import Loading from '../components/common/Loading';
 import { useAppSelector } from '../store/hooks';
 import { aiService, PeakHourData } from '../services/aiService';
 import { AIAnalytics } from '../components/analytics/AIAnalytics';
+import AIInsightsCard from '../components/ai/AIInsightsCard';
 import api from '../services/api';
 import {
   FiUsers,
@@ -181,6 +182,9 @@ const Analytics: React.FC = () => {
             </Card>
           ))}
         </div>
+
+        {/* AI Insights Card */}
+        <AIInsightsCard />
 
         {/* Charts Row */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
