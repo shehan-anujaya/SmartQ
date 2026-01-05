@@ -33,7 +33,7 @@ function AppContent() {
         // Token is invalid, user will be redirected by API interceptor
       });
     }
-  }, []);
+  }, [dispatch, token, isAuthenticated]);
 
   return (
     <>

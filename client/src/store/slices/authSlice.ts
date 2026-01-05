@@ -142,11 +142,18 @@ const authSlice = createSlice({
         state.loading = false;
         if (action.payload) {
           state.user = action.payload;
+          localStorage.setItem('user', JSON.stringify(action.payload));
         }
       })
       .addCase(getMe.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
+        // Clear invalid session
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        state.user = null;
+        state.token = null;
+        state.isAuthenticated = false;
       });
 
     // Update Profile
