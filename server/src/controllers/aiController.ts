@@ -6,6 +6,11 @@ import {
   performAIAnalysis,
   getOptimalBookingSlots
 } from '../services/aiService';
+import {
+  generateQueueInsights,
+  getAIPoweredWaitTime,
+  getSmartRecommendations
+} from '../services/geminiService'; // Using FREE Google Gemini instead of OpenAI
 import Appointment from '../models/Appointment';
 import Queue from '../models/Queue';
 
@@ -385,6 +390,95 @@ export const analyzeQueueEfficiency = async (
         peakHours: [],
         recommendations: []
       }
+    } as ApiResponse);
+  }
+};
+
+// ============= REAL AI ENDPOINTS (OpenAI Powered) =============
+
+// @desc    Get AI-powered queue insights
+// @route   GET /api/ai/insights
+// @access  Private (Admin/Staff)
+export const getAIInsights = async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const days = parseInt(req.query.days as string) || 30;
+    
+    const insights = await generateQueueInsights(days);
+    
+    res.status(200).json({
+      success: true,
+      data: {
+        insights,
+        generatedAt: new Date(),
+        analyzedDays: days,
+        poweredBy: 'Google Gemini AI (FREE)'
+      }
+    } as ApiResponse);
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      error: 'Failed to generate AI insights'
+    } as ApiResponse);
+  }
+};
+
+// @desc    Get AI-powered wait time with reasoning
+// @route   GET /api/ai/smart-wait-time/:serviceId
+// @access  Public
+export const getSmartWaitTime = async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const { serviceId } = req.params;
+    const queueSize = parseInt(req.query.queueSize as string) || 0;
+    
+    const result = await getAIPoweredWaitTime(serviceId, queueSize);
+    
+    res.status(200).json({
+      success: true,
+      data: {
+        estimatedWaitMinutes: result.prediction,
+        reasoning: result.reasoning,
+        queueSize,
+        generatedAt: new Date(),
+        poweredBy: 'Google Gemini AI (FREE)'
+      }
+    } as ApiResponse);
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      error: 'Failed to estimate wait time'
+    } as ApiResponse);
+  }
+};
+
+// @desc    Get personalized smart recommendations
+// @route   GET /api/ai/recommendations
+// @access  Private
+export const getPersonalizedRecommendations = async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const customerId = req.user?.userId;
+    
+    if (!customerId) {
+      res.status(401).json({
+        success: false,
+        error: 'User not authenticated'
+      } as ApiResponse);
+      return;
+    }
+    
+    const recommendations = await getSmartRecommendations(customerId);
+    
+    res.status(200).json({
+      success: true,
+      data: {
+        recommendations,
+        generatedAt: new Date(),
+        poweredBy: 'Google Gemini AI (FREE)'
+      }
+    } as ApiResponse);
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      error: 'Failed to generate recommendations'
     } as ApiResponse);
   }
 };

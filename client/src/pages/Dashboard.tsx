@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../store/hooks';
 import { getServices } from '../store/slices/serviceSlice';
 import { getMyQueues, getQueueStats } from '../store/slices/queueSlice';
@@ -132,37 +133,37 @@ const Dashboard: React.FC = () => {
             <div className="space-y-3">
               {user?.role === 'customer' ? (
                 <>
-                  <a
-                    href="/appointments/create"
+                  <Link
+                    to="/appointments"
                     className="block p-4 border border-gray-200 rounded-lg hover:border-primary-500 hover:bg-primary-50 transition-colors"
                   >
                     <h3 className="font-semibold text-gray-900">Book Appointment</h3>
                     <p className="text-sm text-gray-600 mt-1">Schedule a new appointment</p>
-                  </a>
-                  <a
-                    href="/queue/join"
+                  </Link>
+                  <Link
+                    to="/queue"
                     className="block p-4 border border-gray-200 rounded-lg hover:border-primary-500 hover:bg-primary-50 transition-colors"
                   >
                     <h3 className="font-semibold text-gray-900">Join Queue</h3>
                     <p className="text-sm text-gray-600 mt-1">Get in line for a service</p>
-                  </a>
+                  </Link>
                 </>
               ) : (
                 <>
-                  <a
-                    href="/queue"
+                  <Link
+                    to="/queue/manage"
                     className="block p-4 border border-gray-200 rounded-lg hover:border-primary-500 hover:bg-primary-50 transition-colors"
                   >
                     <h3 className="font-semibold text-gray-900">Manage Queue</h3>
                     <p className="text-sm text-gray-600 mt-1">View and manage current queue</p>
-                  </a>
-                  <a
-                    href="/appointments"
+                  </Link>
+                  <Link
+                    to="/appointments/manage"
                     className="block p-4 border border-gray-200 rounded-lg hover:border-primary-500 hover:bg-primary-50 transition-colors"
                   >
                     <h3 className="font-semibold text-gray-900">View Appointments</h3>
                     <p className="text-sm text-gray-600 mt-1">Manage all appointments</p>
-                  </a>
+                  </Link>
                 </>
               )}
             </div>
