@@ -97,7 +97,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
           </div>
 
           {/* Navigation */}
-          <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+          <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto min-h-0">
             {navLinks.map((link) => {
               const isActive = location.pathname === link.to;
               return (
@@ -117,8 +117,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
             })}
           </nav>
 
-          {/* User section */}
-          <div className="border-t border-slate-200 p-4 bg-slate-50">
+          {/* User section - sticky at bottom */}
+          <div className="border-t border-slate-200 p-4 bg-slate-50 shrink-0">
             <div className="flex items-center space-x-3 mb-3">
               <div className="w-9 h-9 bg-white border border-slate-200 rounded-full flex items-center justify-center text-primary-600 font-bold shadow-sm">
                 {user?.name?.charAt(0).toUpperCase()}
