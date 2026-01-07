@@ -32,10 +32,33 @@ export const getPeakHoursPrediction = async (req: AuthRequest, res: Response): P
 
     const predictions = await predictPeakHours(days);
 
+    // Transform predictions to match frontend expectations
+    const transformedPredictions = predictions.map(pred => {
+      const expectedLoad = Math.min(Math.round((pred.predictedVolume / 15) * 100), 100); // Normalize to percentage
+      let recommendation = '';
+      
+      if (expectedLoad > 75) {
+        recommendation = 'High demand - Consider additional staff';
+      } else if (expectedLoad > 50) {
+        recommendation = 'Moderate demand - Standard staffing';
+      } else {
+        recommendation = 'Low demand - Minimum staff required';
+      }
+
+      return {
+        hour: pred.hour,
+        dayOfWeek: pred.dayOfWeek,
+        expectedLoad,
+        recommendation,
+        predictedVolume: pred.predictedVolume,
+        confidence: pred.confidence
+      };
+    });
+
     res.status(200).json({
       success: true,
       data: {
-        predictions,
+        predictions: transformedPredictions,
         analyzedDays: days,
         generatedAt: new Date()
       }

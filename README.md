@@ -371,6 +371,9 @@ VITE_API_URL=http://localhost:5000/api
 ![AI Analytics](./screenshots/analytics2.png)
 *AI-powered analytics with intelligent insights*
 
+![AI Analytics Details](./screenshots/analytics3.png)
+*Detailed AI analytics with peak hours and recommendations*
+
 ### Queue Management
 ![Queue Management](./screenshots/queuemanagement.png)
 *Real-time queue management interface*

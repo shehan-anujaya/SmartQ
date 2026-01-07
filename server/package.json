@@ -10,7 +10,10 @@
     "test": "jest",
     "seed:users": "ts-node src/scripts/seedUsers.ts",
     "seed:services": "ts-node src/scripts/seedServices.ts",
-    "seed:queue": "ts-node src/scripts/seedQueue.ts"
+    "seed:queue": "ts-node src/scripts/seedQueue.ts",
+    "seed:historical": "ts-node src/scripts/seedHistoricalData.ts",
+    "seed:current": "ts-node src/scripts/seedCurrentQueue.ts",
+    "seed:all": "npm run seed:users && npm run seed:services && npm run seed:historical && npm run seed:current"
   },
   "keywords": [
     "queue",

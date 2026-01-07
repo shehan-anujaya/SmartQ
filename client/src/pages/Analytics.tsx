@@ -109,7 +109,9 @@ const Analytics: React.FC = () => {
         });
 
         if (peakHoursRes.success && peakHoursRes.data) {
-          setPeakHours(peakHoursRes.data);
+          // Extract predictions array from the response
+          const predictionsData = peakHoursRes.data.predictions || peakHoursRes.data;
+          setPeakHours(Array.isArray(predictionsData) ? predictionsData : []);
         }
 
         if (insightsRes.success && insightsRes.data) {
