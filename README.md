@@ -10,7 +10,7 @@
 [![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/)
 [![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 
-[Live Demo](https://smart-k6a1t71px-shehans-projects-a755a7eb.vercel.app) | [API Documentation](#api-endpoints)
+[Live Demo](https://smart-q-nine.vercel.app) | [API Documentation](#api-endpoints)
 
 </div>
 
@@ -334,7 +334,7 @@ VITE_API_URL=http://localhost:5000/api
 
 | Component | URL |
 |-----------|-----|
-| **Frontend** | [https://smart-k6a1t71px-shehans-projects-a755a7eb.vercel.app](https://smart-k6a1t71px-shehans-projects-a755a7eb.vercel.app) |
+| **Frontend** | [https://smart-q-nine.vercel.app](https://smart-q-nine.vercel.app) |
 | **Backend API** | [https://smartq-production.up.railway.app](https://smartq-production.up.railway.app) |
 
 ### Deploy Frontend to Vercel
